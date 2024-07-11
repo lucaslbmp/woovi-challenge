@@ -1,36 +1,33 @@
-import React from "react";
-import Checkbox from "../Checkbox";
+import React, { ChangeEventHandler } from "react";
+import Checkbox from "@/components/Checkbox";
 import Tip from "../Tip";
+import { formatToReais } from "@/app/utils/functions";
 
 type OptionCardProps = {
+  value: string;
   title?: string;
   numberOfInstallments: number;
   installmentValue: number;
   highlighted?: string;
   tip?: React.ReactNode;
   total?: number;
-  className?: string
+  className?: string,
 };
 
 export default function OptionCard({
+  value,
   title,
   numberOfInstallments,
   installmentValue,
   highlighted,
   tip,
   total,
-  className
+  className,
 }: OptionCardProps) {
 
-  const installmentValueStr = installmentValue.toLocaleString("pt-br", {
-    style: "currency",
-    currency: "BRL",
-  });
+  const installmentValueStr = formatToReais(installmentValue)
 
-  const totalStr = installmentValue.toLocaleString("pt-br", {
-    style: "currency",
-    currency: "BRL",
-  });
+  const totalStr = formatToReais(total);
 
   return (
     <section className={"rounded-[10px] border-2 border-secondary flex flex-col gap-1 p-5" + " " + className}>
@@ -42,7 +39,7 @@ export default function OptionCard({
           </strong>
           <span>{installmentValueStr}</span>
         </div>
-        <Checkbox className="text-right" name="payment" id={`payment`}/>
+        <Checkbox className="text-right" name="payment" value={value}/>
       </div>
       {highlighted && <span className="text-highlight">{highlighted}</span>}
       {tip && (
