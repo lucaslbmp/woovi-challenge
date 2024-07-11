@@ -1,3 +1,4 @@
+import { nunitoBold } from "@/app/utils/fonts";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -8,10 +9,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      // backgroundImage: {},
+      fontFamily: {
+        nunito: ["var(--font-nunito)"],
+        nunitoBold: ["var(--font-nunito-bold)"],
+      },
+      colors: {
+        primary: "#133A6F",
+        secondary: "#E5E5E5",
+        background: "white",
+        textPrimary: "#4D4D4D",
+        textSecondary: "#AFAFAF",
+        textTerciary: "white",
+        highlight: "#03D69D",
+        highlightSecondary: "#F4FBF9",
       },
     },
   },
