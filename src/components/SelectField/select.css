@@ -1,0 +1,9 @@
+.select-wrapper::after {
+    content: '▼'; /* Custom arrow character */
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Make sure the arrow doesn't capture mouse events */
+  }

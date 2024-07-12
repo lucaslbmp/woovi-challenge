@@ -22,7 +22,7 @@ function StepTrace({ completed }: StepTraceProps) {
 export function StepsProgressBar({ steps }: StepsProgressBarProps) {
   return (
     <div className="flex flex-col gap-4">
-      {steps.map((step, i) => (
+      {steps?.map((step, i) => (
         <div key={i} className="flex flex-row gap-2 items-center relative">
           <Checkbox
             className={`!w-4 !h-4 bg-background ${
