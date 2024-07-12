@@ -3,8 +3,8 @@
 import { PaymentMethod } from "@/types";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
-import { paymentOptions } from "@/app/data";
-import { formatToReais } from "@/app/utils/functions";
+import { paymentOptions } from "../../../node-api/data";
+import { formatToReais } from "@/utils/functions";
 import Button from "../Button";
 import { sendPaymentData, setCurrentPaymentMethod } from "@/actions";
 import { ChangeEvent } from "react";

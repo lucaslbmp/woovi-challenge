@@ -1,9 +1,10 @@
-import { paymentOptions } from "@/app/data";
-import { formatToReais } from "@/app/utils/functions";
+import { paymentOptions } from "../../../node-api/data";
+import { formatToReais } from "@/utils/functions";
 import { StepsProgressBar } from "@/components/StepsProgressBar";
 import HRule from "@/components/HRule";
 import { redirect } from "next/navigation";
 import { buildPaymentSteps, getCurrentPaymentMethod } from "@/actions";
+import { PaymentMethod } from "@/types";
 
 type PaymentDetailsPageProps = {
   children: React.ReactNode;

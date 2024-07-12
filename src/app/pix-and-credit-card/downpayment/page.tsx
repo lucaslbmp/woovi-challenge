@@ -1,4 +1,4 @@
-import { paymentOptions } from "@/app/data";
+import { paymentOptions } from "../../../../node-api/data";
 import QRCodeInterface from "@/components/QRCodeInterface";
 import { redirect } from "next/navigation";
 import { getCurrentPaymentMethod, mockUndoFirstPayment } from "@/actions";

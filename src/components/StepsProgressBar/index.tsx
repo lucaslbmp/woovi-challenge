@@ -26,7 +26,7 @@ export function StepsProgressBar({ steps }: StepsProgressBarProps) {
         <div key={i} className="flex flex-row gap-2 items-center relative">
           <Checkbox
             className={`!w-4 !h-4 bg-background ${
-              step.selected ? "!border-highlight" : "!border-secondary"
+              step.current ? "!border-highlight" : "!border-secondary"
             }`}
             disabled
             checked={step.completed}

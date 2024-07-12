@@ -3,8 +3,8 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { PaymentMethod, Step } from "./types";
-import { formatToReais } from "./app/utils/functions";
-import { paymentOptions } from "./app/data";
+import { formatToReais } from "./utils/functions";
+import { paymentOptions } from "../node-api/data";
 
 export async function paymentChoiceAction(formData: FormData) {
     const payment = formData.get("payment") as string;
@@ -40,7 +40,7 @@ export async function buildPaymentSteps(paymentMethod: PaymentMethod) {
       description: "1ª entrada no PIX",
       value: formatToReais(paymentMethod.installmentValue),
       completed: false,
-      selected: true,
+      current: true,
     },
   ];
   for (var i = 1; i < paymentMethod.numberOfInstallments; i++) {
@@ -48,7 +48,7 @@ export async function buildPaymentSteps(paymentMethod: PaymentMethod) {
       description: i + 1 + "ª no cartão",
       value: formatToReais(paymentMethod.installmentValue),
       completed: false,
-      selected: false,
+      current: false,
     });
   }
   return steps;
@@ -82,7 +82,7 @@ export async function mockFirstPayment() {
     stepsArray.map(
       (step: any, i: number) => (step.completed = i === 0 ? true : false)
     );
-    stepsArray[1].selected = true;
+    stepsArray[1].current = true;
     savePaymentSteps(stepsArray);
   } catch (err) {
     return;
@@ -94,7 +94,7 @@ export async function mockUndoFirstPayment() {
     const stepsArray = await getPaymentSteps();
     stepsArray.map((step: any) => (step.completed = false));
     stepsArray.map(
-      (step: any, i: number) => (step.selected = i === 0 ? true : false)
+      (step: any, i: number) => (step.current = i === 0 ? true : false)
     );
     savePaymentSteps(stepsArray);
   } catch (err) {

@@ -1,0 +1,25 @@
+@base_url = http://localhost:8000
+
+###
+GET {{base_url}}/payments/list
+content-type: application/json
+
+###
+GET {{base_url}}/payments/111/history
+content-type: application/json
+
+###
+POST {{base_url}}/payments/111/history
+content-type: application/json
+
+{
+    "id": "opt4"
+}
+
+###
+PATCH {{base_url}}/payments/111/execute
+content-type: application/json
+
+{
+    "id": "1"
+}

@@ -6,7 +6,10 @@ export type PaymentMethod = {
   numberOfInstallments: number;
   installmentValue: number;
   highlighted?: string;
-  tip?: React.ReactNode;
+  tip?: {
+    highlight: string;
+    text: string;
+  };
   total?: number;
 };
 
@@ -14,5 +17,5 @@ export type Step = {
   description: string;
   value: string;
   completed: boolean;
-  selected: boolean;
+  current: boolean;
 };

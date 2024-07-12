@@ -1,11 +1,12 @@
-import { paymentOptions } from "@/app/data";
-import { formatToReais } from "@/app/utils/functions";
+import { paymentOptions } from "../../../node-api/data";
+import { formatToReais } from "@/utils/functions";
 import Button from "@/components/Button";
 import PageTitle from "@/components/PageTitle";
 import Image from "next/image";
+import { PaymentMethod } from "@/types";
 
 type QRCodeInterfaceProps = {
-  currPaymentMethod: (typeof paymentOptions)[0];
+  currPaymentMethod: PaymentMethod;
 };
 
 export default function QRCodeInterface({

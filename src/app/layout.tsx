@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { nunito, nunitoBold } from "./utils/fonts";
+import { nunito, nunitoBold } from "../utils/fonts";
 import "./globals.css";
 import Logo from "@/components/Logo";
 import Footer from "@/components/Footer";

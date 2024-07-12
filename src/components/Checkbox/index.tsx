@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getRandomInt } from "../../app/utils/functions";
+import { getRandomInt } from "../../utils/functions";
 
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 

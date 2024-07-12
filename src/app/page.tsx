@@ -2,7 +2,7 @@
 
 import OptionCard from "@/components/OptionCard";
 import OptionCardsColumn from "@/components/OptionCardsColumn";
-import { paymentOptions } from "@/app/data";
+import { paymentOptions } from "../../node-api/data";
 import PageTitle from "@/components/PageTitle";
 import Button from "@/components/Button";
 import {  paymentChoiceAction } from "@/actions";

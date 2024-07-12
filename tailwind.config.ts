@@ -1,4 +1,4 @@
-import { nunitoBold } from "@/app/utils/fonts";
+import { nunitoBold } from "@/utils/fonts";
 import type { Config } from "tailwindcss";
 
 const config: Config = {

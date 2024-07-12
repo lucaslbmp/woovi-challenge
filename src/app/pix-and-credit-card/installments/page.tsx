@@ -1,5 +1,5 @@
 import { getCurrentPaymentMethod } from "@/actions";
-import { paymentOptions } from "@/app/data";
+import { paymentOptions } from "../../../../node-api/data";
 import PaymentForm from "@/components/PaymentForm";
 import { redirect } from "next/navigation";
 
