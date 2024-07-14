@@ -15,7 +15,7 @@ module.exports = {
         current: true,
       },
     ];
-    console.log(paymentMethod)
+    //console.log(paymentMethod)
     for (var i = 1; i < paymentMethod.numberOfInstallments; i++) {
       steps.push({
         description: i + 1 + "ª no cartão",

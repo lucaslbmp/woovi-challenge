@@ -4,7 +4,9 @@ import { StepsProgressBar } from "@/components/StepsProgressBar";
 import HRule from "@/components/HRule";
 import { redirect } from "next/navigation";
 import { buildPaymentSteps, getCurrentPaymentMethod } from "@/actions";
-import { PaymentMethod } from "@/types";
+import { Payment, PaymentMethod, Step } from "@/types";
+import { getPayment } from "@/services";
+import { retrievePayment } from "@/cookiesActions";
 
 type PaymentDetailsPageProps = {
   children: React.ReactNode;
@@ -15,11 +17,14 @@ export default async function PaymentDetailsPage({
 }: PaymentDetailsPageProps) {
 
 
-  const currPaymentMethod = await getCurrentPaymentMethod(paymentOptions);
+  //const currPaymentMethod = await getCurrentPaymentMethod(paymentOptions);
+  const payment = await getPayment("111","999");
+  //const payment = await retrievePayment();
+
   
-  if (!currPaymentMethod) redirect("/");
+  if (!payment) redirect("/");
   // const steps = await getPaymentSteps();
-  const steps =  await buildPaymentSteps(currPaymentMethod) ?? [];
+  const steps =  await buildPaymentSteps(payment) ?? [];
 
   return (
     <main className="font-nunito flex flex-col gap-8 m-4">
@@ -33,7 +38,7 @@ export default async function PaymentDetailsPage({
       <div className="flex">
         <span>CET: 0,5%</span>
         <span className="text-right flex-1">
-          Total: {formatToReais(currPaymentMethod?.total ?? "-")}
+          Total: {formatToReais(payment?.total ?? "-")}
         </span>
       </div>
 

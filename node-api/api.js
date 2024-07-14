@@ -5,8 +5,8 @@ const {
   paymentHistory,
   updatePaymentHistory,
   getPaymentHistory,
-  getCurrPaymentMethod,
-  setCurrPaymentMethod,
+  getPayment,
+  setPayment,
 } = require("./data");
 const { buildPaymentSteps } = require("./functions.js");
 
@@ -14,67 +14,78 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.get("/payments/list", async (req, res) => {
+app.get("/payments/options", async (req, res) => {
   return res.json({
     paymentOptions,
   });
 });
 
-app.get("/payments/:id/method", async (req, res) => {
-  return res.json(getCurrPaymentMethod());
+app.get("/user/:userId/payments/:id", async (req, res) => {
+  return res.json(getPayment());
 });
 
-app.post("/payments/:id/method", async (req, res) => {
-  const { id } = req.body;
-  const paymentMethod = paymentOptions.find((method) => method.value === id);
-  setCurrPaymentMethod(paymentMethod);
+app.post("/user/:userId/payments/create", async (req, res) => {
+  const { optionId } = req.body;
+  const option = paymentOptions.find((method) => method.value === optionId);
+
+  const { 
+    numberOfInstallments,
+    installmentValue,
+    total
+  } = option;
+
+  const _installments = Array(numberOfInstallments - 1);
+  for(var i=0; i<_installments.length; i++){
+    _installments[i] = {
+      id: i+1,
+      value: installmentValue,
+      completed: false,
+    }
+  }
+
+  setPayment({
+    id: "111",
+    downpayment: installmentValue,
+    downpaymentStatus: "open",
+    total: total,
+    installments: _installments,
+  });
+
   return res.json({
     message: "Payment method setted successfully!",
-  });
+  })
 });
 
-app.post("/payments/:id/history", async (req, res) => {
-  const { id } = req.body;
-  const paymentMethod = paymentOptions.find((method) => method.value === id);
-  const steps = await buildPaymentSteps(paymentMethod);
-  updatePaymentHistory(steps);
-  return res.json({
-    message: "History created successfully!",
-  });
-});
+// app.post("/payments/:id/history", async (req, res) => {
+//   const { id } = req.body;
+//   const paymentMethod = paymentOptions.find((method) => method.value === id);
+//   const steps = await buildPaymentSteps(paymentMethod);
+//   updatePaymentHistory(steps);
+//   return res.json({
+//     message: "History created successfully!",
+//   });
+// });
 
-app.get("/payments/:id/history", async (req, res) => {
-  return res.json({
-    paymentHistory: getPaymentHistory(),
-  });
-});
+// app.get("/payments/:id/history", async (req, res) => {
+//   return res.json({
+//     paymentHistory: getPaymentHistory(),
+//   });
+// });
 
 // description: string;
 // value: string;
 // completed: boolean;
 // selected: boolean;
 
-app.patch("/payments/:paymentId/execute", async (req, res) => {
-  const { id } = req.body;
-  const steps = getPaymentHistory();
-
-  if (steps?.at(id-1)) {
-    const currStep = steps?.at(id-1);
-    currStep.current = false;
-    currStep.completed = true;
-    steps[id-1] = currStep;
-  }
-
-  if (steps?.at(id)) {
-    const nextStep = steps?.at(id);
-    nextStep.current = true;
-    steps[id] = nextStep;
-  }
-
-  updatePaymentHistory(steps);
+app.patch("/user/:userId/payments/:paymentId/execute/downpayment", async (req, res) => {
+  const payment = getPayment();
+  setPayment({
+    ...payment,
+    downpaymentStatus: "done",
+  });
 
   return res.json({
-    paymentHistory: getPaymentHistory(),
+    message: "Downpayment executed successfully",
   });
 });
 

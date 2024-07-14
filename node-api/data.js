@@ -57,12 +57,12 @@ module.exports = {
     },
   ],
 
-  currPaymentMethod: {},
-  setCurrPaymentMethod: (method) => {
-    module.exports.currPaymentMethod = {...method}
+  payment: {},
+  setPayment: (payment) => {
+    module.exports.payment = {...payment}
   },
-  getCurrPaymentMethod: () => {
-    return  module.exports.currPaymentMethod;
+  getPayment: () => {
+    return  module.exports.payment;
   },
 
   paymentHistory: [],

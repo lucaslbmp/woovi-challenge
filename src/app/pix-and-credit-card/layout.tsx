@@ -1,6 +1,6 @@
-import Footer from "@/components/Footer";
 import type { Metadata } from "next";
 import PaymentDetailsPage from "./component";
+import PaymentContextProvider from "@/contexts/global-context";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <>
+    <PaymentContextProvider>
       <PaymentDetailsPage>{children}</PaymentDetailsPage>
+      </PaymentContextProvider>
     </>
   );
 }
