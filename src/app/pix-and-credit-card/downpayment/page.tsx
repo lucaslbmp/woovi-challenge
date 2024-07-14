@@ -1,4 +1,4 @@
-import { paymentOptions } from "../../../../node-api/data";
+import { paymentOptions } from "../../api/data";
 import QRCodeInterface from "@/components/QRCodeInterface";
 import { redirect } from "next/navigation";
 import { getCurrentPaymentMethod } from "@/actions";

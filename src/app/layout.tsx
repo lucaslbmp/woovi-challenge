@@ -3,6 +3,8 @@ import { nunito, nunitoBold } from "../utils/fonts";
 import "./globals.css";
 import Logo from "@/components/Logo";
 import Footer from "@/components/Footer";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,6 +22,7 @@ export default function RootLayout({
         <Logo />
         {children}
         <Footer />
+        <ToastContainer />
       </body>
     </html>
   );

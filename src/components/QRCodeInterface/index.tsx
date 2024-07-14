@@ -1,4 +1,4 @@
-import { paymentOptions } from "../../../node-api/data";
+import { paymentOptions } from "../../app/api/data";
 import { formatToReais } from "@/utils/functions";
 import Button from "@/components/Button";
 import PageTitle from "@/components/PageTitle";

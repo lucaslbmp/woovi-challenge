@@ -32,7 +32,7 @@ export async function createPayment(userId: string, option: string) {
 export async function executeDownpayment(userId: string, paymentId: string) {
   try {
     const response = await fetch(
-      `${baseUrl}/user/${userId}/payments/${paymentId}/execute/downpayment/$`,
+      `${baseUrl}/user/${userId}/payments/${paymentId}/execute/downpayment`,
       {
         method: "PATCH",
         // body: JSON.stringify({

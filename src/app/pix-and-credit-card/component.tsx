@@ -1,12 +1,9 @@
-import { paymentOptions } from "../../../node-api/data";
 import { formatToReais } from "@/utils/functions";
 import { StepsProgressBar } from "@/components/StepsProgressBar";
 import HRule from "@/components/HRule";
 import { redirect } from "next/navigation";
-import { buildPaymentSteps, getCurrentPaymentMethod } from "@/actions";
-import { Payment, PaymentMethod, Step } from "@/types";
+import { buildPaymentSteps } from "@/actions";
 import { getPayment } from "@/services";
-import { retrievePayment } from "@/cookiesActions";
 
 type PaymentDetailsPageProps = {
   children: React.ReactNode;
@@ -18,7 +15,11 @@ export default async function PaymentDetailsPage({
 
 
   //const currPaymentMethod = await getCurrentPaymentMethod(paymentOptions);
-  const payment = await getPayment("111","999");
+  // const fetcher = ([userId, id] : [string, string]) => getPayment(userId, id)
+  // const {data: payment, error, isLoading} = useSWR(["111","999"], fetcher)
+
+  const payment = await getPayment("111", "999")
+  
   //const payment = await retrievePayment();
 
   

@@ -4,27 +4,32 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { Payment, PaymentMethod, Step } from "./types";
 import { formatToReais } from "./utils/functions";
-import { paymentOptions } from "../node-api/data";
+import { paymentOptions } from "./app/api/data";
 import { createPayment, executeDownpayment } from "./services";
+//import {toast} from 'react-toastify'
 
-export async function paymentChoiceAction(formData: FormData) {
+export async function paymentChoiceAction(prevState: any,formData: FormData) {
   try {
     const paymentOption = formData.get("payment") as string;
     if (!paymentOption) {
-      alert("Nenhuma opção foi selecionada!");
-      return;
+      //toast("Nenhuma opção foi selecionada!");
+      return {
+        status: "error",
+        message: "Nenhuma opção selecionada!"
+      };
     }
     await createPayment("111", paymentOption);
-    redirect("/pix-and-credit-card/downpayment");
+    return {status: "success", message: "Forma de pagamento escolhida com sucesso!"}
+    //redirect("/pix-and-credit-card/downpayment");
   } catch (err) {
-    throw err;
+    return { status: "success", message: "Escolha de pagamento mal sucedida!"}
   }
 }
 
 export async function qrCodeFormAction(formData: FormData) {
   try {
     const response = await executeDownpayment("111", "999");
-    if(response.ok) return new Error('QR code não validado!');
+    if(!response.ok) return;
     redirect('/pix-and-credit-card/installments')
 
   } catch (err) {
@@ -57,12 +62,12 @@ export async function buildPaymentSteps(payment: Payment) {
       current: !payment.installments.at(0)?.completed,
     },
   ];
-  for (var i = 1; i < payment.installments.length; i++) {
+  for (var i = 0; i < payment.installments.length; i++) {
     steps.push({
-      description: i + 1 + "ª no cartão",
+      description: i + 2 + "ª no cartão",
       value: formatToReais(payment.installments?.at(i)?.value),
-      completed: steps?.at(i)?.completed ?? false,
-      current: !!steps?.at(i - 1)?.completed,
+      completed: steps?.at(i+1)?.completed ?? false,
+      current: !!steps?.at(i)?.completed,
     });
   }
   return steps;

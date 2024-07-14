@@ -3,7 +3,7 @@
 import { Payment, PaymentMethod } from "@/types";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
-import { paymentOptions } from "../../../node-api/data";
+import { paymentOptions } from "../../app/api/data";
 import { formatToReais } from "@/utils/functions";
 import Button from "../Button";
 import { sendPaymentData, setCurrentPaymentMethod } from "@/actions";
