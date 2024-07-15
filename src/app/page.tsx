@@ -5,7 +5,7 @@ import PageTitle from "@/components/PageTitle";
 import Button from "@/components/Button";
 import {  paymentChoiceAction } from "@/actions";
 import { usePaymentContext } from "@/contexts/global-context";
-import { getPayment } from "@/services";
+import { requestPayment } from "@/services";
 import PaymentOptionForm from "@/components/PaymentOptionForm";
 
 export default async function PaymentPage() {

@@ -3,7 +3,7 @@ import { StepsProgressBar } from "@/components/StepsProgressBar";
 import HRule from "@/components/HRule";
 import { redirect } from "next/navigation";
 import { buildPaymentSteps } from "@/actions";
-import { getPayment } from "@/services";
+import { requestPayment } from "@/services";
 
 type PaymentDetailsPageProps = {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export default async function PaymentDetailsPage({
   // const fetcher = ([userId, id] : [string, string]) => getPayment(userId, id)
   // const {data: payment, error, isLoading} = useSWR(["111","999"], fetcher)
 
-  const payment = await getPayment("111", "999")
+  const payment = await requestPayment("111", "999")
   
   //const payment = await retrievePayment();
 

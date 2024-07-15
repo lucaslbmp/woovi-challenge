@@ -1,6 +1,6 @@
 "use client";
 
-import { Payment, PaymentMethod } from "@/types";
+import { Installment, Payment, PaymentMethod } from "@/types";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
 import { paymentOptions } from "../../app/api/data";
@@ -8,9 +8,10 @@ import { formatToReais } from "@/utils/functions";
 import Button from "../Button";
 import { sendPaymentData, setCurrentPaymentMethod } from "@/actions";
 import { ChangeEvent, use, useCallback, useEffect, useState } from "react";
-import { getPayment } from "@/services";
+import { createPayment, requestPayment } from "@/services";
 import { usePaymentContext } from "@/contexts/global-context";
 import useSWR from "swr";
+import { storePayment } from "@/cookiesActions";
 // import { deleteCookie, getCookie, getCookies, setCookie } from "cookies-next";
 
 type PaymentFormProps = {
@@ -18,53 +19,78 @@ type PaymentFormProps = {
 };
 
 export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
-  const selectedMethod = paymentOptions.find(
-    (method) => method.value === paymentMethod.value
-  );
-  function handlePaymentMethodChange(e: ChangeEvent<HTMLSelectElement>) {
-    const method = paymentOptions.find((opt) => opt.value === e.target.value);
-    if (method?.value) setCurrentPaymentMethod(method.value);
+  // const selectedMethod = paymentOptions.find(
+  //   (method) => method.value === paymentMethod.value
+  // );
+  const [newPayment, setNewPayment] = useState<Payment>();
+  const [selectedOption, setSelectedOption] = useState(1);
+  const [installmenOptions, setInstallmentOptions] = useState<Installment[]>();
+
+  function generateInstallmentOptions(payment?: Payment) {
+    if (!payment) return [];
+    const list = [{ id: 1, value: payment.total, completed: false }];
+
+    const totalInstallmentsValue = payment.total - payment.downpayment;
+
+    for (var i = 1; i < paymentOptions.length - 1; i++) {
+      list.push({
+        id: i + 1,
+        value: totalInstallmentsValue / (i + 1),
+        completed: false,
+      });
+    }
+
+    // const _numberOfInstallments = (payment.downpaymentStatus !== "done" && numberOfInstallments >= 1)
+    // ? numberOfInstallments
+    // : (numberOfInstallments - 1)
+
+    return list;
   }
-  //const [paymentInfo, setPaymentInfo] = useState(undefined);
-  // setCookie('test', '2');
-  // const test = getCookie('test');
-  //console.log(test)
 
-  //console.log(payment);
-  // const { payment, setPayment } = usePaymentContext();
-  
-  // const getPaymentData = async () => {
-  //     try {
-  //       //const _payment = await getPayment("111","999");
-  //       //setPayment(_payment);
+  function handlePaymentMethodChange(e: ChangeEvent<HTMLSelectElement>) {
+    // const method = paymentOptions.find((opt) => opt.value === e.target.value);
+    // if (method?.value) setCurrentPaymentMethod(method.value);
+    if (!payment) return;
 
-  //       const response = await fetch(
-  //         "https://httpbin.org/get"
-  //       );
-  //       const data = await response.json();
-  //       return data;
-  //     } catch (err) {
-  //       console.log(err);
-  //       throw err;
-  //     }
-  //   };
+    const _option = installmenOptions?.find(
+      (inst) => inst.id === Number(e.target.value)
+    );
+    if (!_option || !_option.id) return;
+    setSelectedOption(_option.id)
 
-  // useEffect(() => {
-  //   getPaymentData();
-  // }, [setPayment]);
+    const _installments = [];
+    for(var i=0; i<_option.id; i++)
+      _installments.push({
+          id: i+1,
+          value: _option.value,
+          completed: _option.completed,
+        });
+    //setInstallmentOptions(_installments);
 
-  // useEffect(() => {
-  //   console.log(payment);
-  // }, [payment]);
+    setNewPayment({...payment, installments: _installments})
+  }
 
-  // http://localhost:8000/user/111/payments/999
+  const fetcher = ([userId, id]: [string, string]) =>
+    requestPayment(userId, id);
+  const { data: payment, error, isLoading } = useSWR(["111", "999"], fetcher);
+  //setNewPayment(data);
 
-  // const fetcher = (url: string) => fetch(url).then((res) => res.json()) as Promise<Payment>
-  // const {data: payment, error, isLoading} = useSWR("http://localhost:8000/user/111/payments/999", fetcher)
-
-  const fetcher = ([userId, id] : [string, string]) => getPayment(userId, id)
-  const {data: payment, error, isLoading} = useSWR(["111","999"], fetcher)
-  //console.log(data)
+  useEffect(() => {
+    // if (newPayment) {
+    //   const _installments = generateInstallmentOptions(newPayment);
+    //   setInstallmentOptions(_installments);
+    // }
+    console.log(newPayment);
+  }, [newPayment]);
+  //const installments = generateInstallmentsList(payment);
+  useEffect(() => {
+    if (payment) {
+      const _installments = generateInstallmentOptions(payment);
+      setInstallmentOptions(_installments);
+      setSelectedOption(payment.installments.length);
+      
+    }
+  }, [payment]);
 
   return (
     <form action={sendPaymentData} className="flex flex-wrap gap-7">
@@ -99,17 +125,14 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
       <SelectField
         label="Parcelas"
         className="flex-grow basis-[16em]"
-        value={selectedMethod?.value}
+        value={selectedOption}
         onChange={handlePaymentMethodChange}
       >
-        {payment?.installments?.length &&
-          payment?.installments?.map((method, i) => (
-            <option key={i} value={method.value}>
-              {`${payment?.installments?.length}x de ${formatToReais(
-                payment?.installments?.at(0)?.value
-              )}`}
-            </option>
-          ))}
+        {installmenOptions?.map((inst, i) => (
+          <option key={i} value={inst.id}>
+            {`${inst.id}x de ${formatToReais(inst.value)}`}
+          </option>
+        ))}
       </SelectField>
       <div className="flex basis-full justify-center">
         <Button className="w-full max-w-[27rem]">Pagar</Button>

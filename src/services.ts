@@ -2,7 +2,7 @@ import { Payment } from "./types";
 
 const baseUrl = "http://localhost:8000";
 
-export async function getPayment(userId: string, paymentId: string) {
+export async function requestPayment(userId: string, paymentId: string) {
   try {
     const response = await fetch(`${baseUrl}/user/${userId}/payments/${paymentId}`);
     if(!response.ok) throw new Error("");

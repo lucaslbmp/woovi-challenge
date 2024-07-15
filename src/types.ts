@@ -13,16 +13,18 @@ export type PaymentMethod = {
   total?: number;
 };
 
+export type Installment = {
+  id: number,
+  value: number,
+  completed: boolean,
+}
+
 export type Payment = {
   id: string;
   downpayment: number,
   downpaymentStatus: string, 
   total: number, 
-  installments: {
-    id: number,
-    value: number,
-    completed: boolean,
-  }[],
+  installments: Installment[],
 }
 
 export type Step = {
