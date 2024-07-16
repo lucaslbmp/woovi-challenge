@@ -19,10 +19,20 @@ import useSWR from "swr";
 import { storePayment } from "@/cookiesActions";
 import { generateInstallments } from "@/utils/functions.ts";
 import { generateInstallmentOptions } from "@/utils/functions.ts";
+import { Formik, FormikProps } from "formik";
 // import { deleteCookie, getCookie, getCookies, setCookie } from "cookies-next";
 
 type PaymentFormProps = {
   paymentMethod: PaymentMethod;
+};
+
+type PaymentFormikProps = {
+  name: string;
+  cpf: string;
+  cardNumber: string;
+  cardExpiration: string;
+  cardCode: string;
+  installmentsOption: string;
 };
 
 export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
@@ -54,7 +64,7 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
 
     const _option = updateSelectedOption(e.target.value);
     if (!_option) return;
-    
+
     // Generating installments according to the newly selected installment option
     const _newInstallments = generateInstallments(_option, payment);
 
@@ -86,54 +96,74 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
     }
   }, [payment]);
 
-
   return (
-    <form action={sendPaymentData} className="flex flex-wrap gap-7">
-      <InputField
-        label="Nome completo"
-        placeholder="Nome completo"
-        className="flex-grow basis-[26rem]"
-      />
-      <InputField
-        mask="999.999.999-99"
-        label="CPF"
-        placeholder="XXX.XXX.XXX-XX"
-        className="flex-grow basis-[16rem]"
-      />
-      <InputField
-        label="Número do cartão"
-        placeholder="Número do cartão"
-        className="flex-grow basis-[16em]"
-      />
-      <InputField
-        type="date"
-        label="Vencimento"
-        placeholder="dd/mm"
-        className="flex-grow basis-[8em]"
-      />
-      <InputField
-        label="CVV"
-        maxLength={3}
-        placeholder="XXX"
-        className="flex-grow basis-[8em]"
-      />
-      <SelectField
-        label="Parcelas"
-        className="flex-grow basis-[16em]"
-        value={selectedOption}
-        onChange={handlePaymentMethodChange}
-      >
-        {installmenOptions?.map((inst, i) => (
-          <option key={i} value={inst.numberOfInstallments}>
-            {`${inst.numberOfInstallments}x de ${formatToReais(
-              inst.installmentValue
-            )}`}
-          </option>
-        ))}
-      </SelectField>
-      <div className="flex basis-full justify-center">
-        <Button className="w-full max-w-[27rem]">Pagar</Button>
-      </div>
-    </form>
+    <Formik
+      initialValues={{
+        name: "",
+        cpf: "",
+        cardNumber: "",
+        cardExpiration: "",
+        cardCode: "",
+        installmentsOption: "",
+      }}
+      onSubmit={() => {}}
+    >
+      {(props: FormikProps<PaymentFormikProps>) => (
+        <form action={sendPaymentData} className="flex flex-wrap gap-7">
+          <InputField
+            name="name"
+            label="Nome completo"
+            placeholder="Nome completo"
+            className="flex-grow basis-[26rem]"
+          />
+          <InputField
+            name="cpf"
+            mask="999.999.999-99"
+            label="CPF"
+            placeholder="XXX.XXX.XXX-XX"
+            className="flex-grow basis-[16rem]"
+          />
+          <InputField
+            name="cardNumber"
+            label="Número do cartão"
+            placeholder="Número do cartão"
+            className="flex-grow basis-[16em]"
+          />
+          <InputField
+            name="cardExpiration"
+            type="date"
+            label="Vencimento"
+            placeholder="dd/mm"
+            className="flex-grow basis-[8em]"
+          />
+          <InputField
+            name="cardCode"
+            label="CVV"
+            maxLength={3}
+            placeholder="XXX"
+            className="flex-grow basis-[8em]"
+          />
+          <InputField
+            as="select"
+            name="installments-option"
+            label="Parcelas"
+            className="flex-grow basis-[16em]"
+            value={selectedOption}
+            onChange={handlePaymentMethodChange}
+          >
+            {installmenOptions?.map((inst, i) => (
+              <option key={i} value={inst.numberOfInstallments}>
+                {`${inst.numberOfInstallments}x de ${formatToReais(
+                  inst.installmentValue
+                )}`}
+              </option>
+            ))}
+          </InputField>
+          <div className="flex basis-full justify-center">
+            <Button className="w-full max-w-[27rem]">Pagar</Button>
+          </div>
+        </form>
+      )}
+    </Formik>
   );
 }
