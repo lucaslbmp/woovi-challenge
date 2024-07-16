@@ -9,7 +9,7 @@ import {
 import InputField from "../InputField";
 import SelectField from "../SelectField";
 import { paymentOptions } from "../../app/api/data";
-import { formatToReais } from "@/utils/functions";
+import { formatToReais } from "@/utils/functions.ts";
 import Button from "../Button";
 import { sendPaymentData, setCurrentPaymentMethod } from "@/actions";
 import { ChangeEvent, use, useCallback, useEffect, useState } from "react";
@@ -17,6 +17,8 @@ import { createPayment, requestPayment } from "@/services";
 import { usePaymentContext } from "@/contexts/global-context";
 import useSWR from "swr";
 import { storePayment } from "@/cookiesActions";
+import { generateInstallments } from "@/utils/functions.ts";
+import { generateInstallmentOptions } from "@/utils/functions.ts";
 // import { deleteCookie, getCookie, getCookies, setCookie } from "cookies-next";
 
 type PaymentFormProps = {
@@ -34,51 +36,6 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
   const [installmenOptions, setInstallmentOptions] =
     useState<InstallmentOption[]>();
 
-  function generateInstallmentOptions(payment?: Payment) {
-    console.log(payment);
-    if (!payment) return [];
-    // const list = [{ id: 1, value: payment.total, completed: payment.downpaymentStatus === "done" }];
-    const list: InstallmentOption[] = [];
-
-    const completedInstallments = payment.installments.filter(
-      (inst) => inst.completed
-    );
-
-    list.push(
-      ...completedInstallments.map((inst) => ({
-        numberOfInstallments: inst.id,
-        installmentValue: inst.value,
-      }))
-    );
-
-    const lastIndex = payment.installments.findLastIndex(
-      (inst) => inst.completed
-    );
-
-    const totalDeducted =
-      (payment.downpaymentStatus === "done" ? payment.downpayment : 0) +
-      completedInstallments.reduce((sum, inst) => sum + inst.value, 0);
-
-    const totalInstallmentsValue = payment.total - totalDeducted;
-    const calcInstallmentValue = (total: number) =>
-      payment.downpaymentStatus === "done" ? total / (i + 1) : total / (i + 2);
-
-    console.log(totalInstallmentsValue);
-
-    for (var i = lastIndex + 1; i < paymentOptions.length - 1; i++) {
-      list.push({
-        numberOfInstallments: i + 1,
-        installmentValue: calcInstallmentValue(totalInstallmentsValue),
-      });
-    }
-
-    // const _numberOfInstallments = (payment.downpaymentStatus !== "done" && numberOfInstallments >= 1)
-    // ? numberOfInstallments
-    // : (numberOfInstallments - 1)
-
-    return list;
-  }
-
   function getInstallmentOption(value: string) {
     return installmenOptions?.find(
       (inst) => inst.numberOfInstallments === Number(value)
@@ -92,29 +49,16 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
     return _option;
   }
 
-  function generateInstallments(
-    _option: InstallmentOption,
-    lastPayment: Payment
-  ) {
-    const _installments = [];
-    for (var i = 0; i < _option.numberOfInstallments; i++)
-      _installments.push({
-        id: i + 1,
-        value: _option.installmentValue,
-        completed: lastPayment.installments.at(i)?.completed ?? false,
-      });
-    return _installments;
-  }
-
   function handlePaymentMethodChange(e: ChangeEvent<HTMLSelectElement>) {
     if (!payment) return;
 
     const _option = updateSelectedOption(e.target.value);
     if (!_option) return;
     
+    // Generating installments according to the newly selected installment option
     const _newInstallments = generateInstallments(_option, payment);
 
-    // Updating payment state with data from the new selected payment form
+    // Updating payment state with data from the newly selected installment option
     setNewPayment({
       ...payment,
       installments: _newInstallments,
@@ -134,7 +78,7 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
   // Updating page for initial payment data
   useEffect(() => {
     if (payment) {
-      const _installments = generateInstallmentOptions(payment);
+      const _installments = generateInstallmentOptions(payment, paymentOptions);
       console.log(_installments);
       setInstallmentOptions(_installments);
       setSelectedOption(payment.installments.length);

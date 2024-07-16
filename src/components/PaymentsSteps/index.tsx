@@ -5,7 +5,7 @@ import { useState } from "react";
 import { usePaymentContext } from "@/contexts/global-context";
 import { redirect } from "next/navigation";
 import HRule from "../HRule";
-import { buildPaymentSteps, formatToReais } from "@/utils/functions";
+import { buildPaymentSteps, formatToReais } from "@/utils/functions.ts";
 
 export default function PaymentSteps() {
   const {payment, setPayment} = usePaymentContext();
@@ -21,7 +21,7 @@ export default function PaymentSteps() {
       <div className="flex">
         <span>CET: 0,5%</span>
         <span className="text-right flex-1">
-          Total: {formatToReais(payment?.total ?? "-")}
+          Total: {formatToReais(payment?.total ?? 0)}
         </span>
       </div>
     </>

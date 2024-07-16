@@ -1,5 +1,5 @@
 import { paymentOptions } from "../../app/api/data";
-import { formatToReais } from "@/utils/functions";
+import { formatToReais } from "@/utils/functions.ts";
 import Button from "@/components/Button";
 import PageTitle from "@/components/PageTitle";
 import Image from "next/image";

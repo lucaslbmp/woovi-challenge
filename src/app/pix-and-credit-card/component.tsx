@@ -1,4 +1,4 @@
-import { buildPaymentSteps, formatToReais } from "@/utils/functions";
+import { buildPaymentSteps, formatToReais } from "@/utils/functions.ts";
 import { StepsProgressBar } from "@/components/StepsProgressBar";
 import HRule from "@/components/HRule";
 import { redirect } from "next/navigation";
@@ -33,7 +33,7 @@ export default async function PaymentDetailsPage({
       {children}
 
       {/* <StepsProgressBar steps={steps} /> */}
-      
+
       <PaymentsSteps />
 
       <HRule />

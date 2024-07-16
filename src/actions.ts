@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { Payment, PaymentMethod, Step } from "./types";
-import { formatToReais } from "./utils/functions";
+import { formatToReais } from "./utils/functions.ts";
 import { paymentOptions } from "./app/api/data";
 import { createPayment, executeDownpayment } from "./services";
 //import {toast} from 'react-toastify'
