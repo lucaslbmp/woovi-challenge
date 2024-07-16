@@ -13,6 +13,11 @@ export type PaymentMethod = {
   total?: number;
 };
 
+export type InstallmentOption = {
+  numberOfInstallments: number;
+  installmentValue: number;
+}
+
 export type Installment = {
   id: number,
   value: number,

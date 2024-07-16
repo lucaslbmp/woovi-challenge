@@ -1,6 +1,11 @@
 "use client";
 
-import { Installment, Payment, PaymentMethod } from "@/types";
+import {
+  Installment,
+  InstallmentOption,
+  Payment,
+  PaymentMethod,
+} from "@/types";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
 import { paymentOptions } from "../../app/api/data";
@@ -23,34 +28,47 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
   //   (method) => method.value === paymentMethod.value
   // );
   //const [newPayment, setNewPayment] = useState<Payment>();
-  const {payment: newPayment, setPayment: setNewPayment} = usePaymentContext();
+  const { payment: newPayment, setPayment: setNewPayment } =
+    usePaymentContext();
   const [selectedOption, setSelectedOption] = useState(1);
-  const [installmenOptions, setInstallmentOptions] = useState<Installment[]>();
+  const [installmenOptions, setInstallmentOptions] =
+    useState<InstallmentOption[]>();
 
   function generateInstallmentOptions(payment?: Payment) {
-    console.log(payment)
+    console.log(payment);
     if (!payment) return [];
     // const list = [{ id: 1, value: payment.total, completed: payment.downpaymentStatus === "done" }];
-    const list =[]
+    const list: InstallmentOption[] = [];
 
-    const completedInstallments = payment.installments.filter(inst => inst.completed);
+    const completedInstallments = payment.installments.filter(
+      (inst) => inst.completed
+    );
 
-    list.push(...completedInstallments.map(inst => ({ id: inst.id, value: inst.value, completed: true })))
+    list.push(
+      ...completedInstallments.map((inst) => ({
+        numberOfInstallments: inst.id,
+        installmentValue: inst.value,
+      }))
+    );
 
-    const lastIndex = payment.installments.findLastIndex(inst => inst.completed);
+    const lastIndex = payment.installments.findLastIndex(
+      (inst) => inst.completed
+    );
 
-    const totalDeducted =  (payment.downpaymentStatus === "done" ? payment.downpayment : 0) + completedInstallments.reduce((sum, inst) => sum + inst.value, 0)
+    const totalDeducted =
+      (payment.downpaymentStatus === "done" ? payment.downpayment : 0) +
+      completedInstallments.reduce((sum, inst) => sum + inst.value, 0);
 
     const totalInstallmentsValue = payment.total - totalDeducted;
-    const calcInstallmentValue = (total: number) => payment.downpaymentStatus === "done" ? total/(i+1) : total/(i+2);
+    const calcInstallmentValue = (total: number) =>
+      payment.downpaymentStatus === "done" ? total / (i + 1) : total / (i + 2);
 
-    console.log(totalInstallmentsValue)
+    console.log(totalInstallmentsValue);
 
-    for (var i = lastIndex+1; i < paymentOptions.length - 1; i++) {
+    for (var i = lastIndex + 1; i < paymentOptions.length - 1; i++) {
       list.push({
-        id: i + 1,
-        value: calcInstallmentValue(totalInstallmentsValue),
-        completed: false,
+        numberOfInstallments: i + 1,
+        installmentValue: calcInstallmentValue(totalInstallmentsValue),
       });
     }
 
@@ -61,45 +79,69 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
     return list;
   }
 
-  function handlePaymentMethodChange(e: ChangeEvent<HTMLSelectElement>) {
-    // const method = paymentOptions.find((opt) => opt.value === e.target.value);
-    // if (method?.value) setCurrentPaymentMethod(method.value);
-    if (!payment) return;
-
-    const _option = installmenOptions?.find(
-      (inst) => inst.id === Number(e.target.value)
+  function getInstallmentOption(value: string) {
+    return installmenOptions?.find(
+      (inst) => inst.numberOfInstallments === Number(value)
     );
-    if (!_option || !_option.id) return;
-    setSelectedOption(_option.id)
-
-    const _installments = [];
-    for(var i=0; i<_option.id; i++)
-      _installments.push({
-          id: i+1,
-          value: _option.value,
-          completed: _option.completed,
-        });
-    //setInstallmentOptions(_installments);
-
-    setNewPayment({...payment, installments: _installments, downpayment: payment.downpaymentStatus === "done" ? payment.downpayment : _option.value})
   }
 
+  function updateSelectedOption(value: string) {
+    const _option = getInstallmentOption(value);
+    if (!_option || !_option.numberOfInstallments) return;
+    setSelectedOption(_option.numberOfInstallments);
+    return _option;
+  }
+
+  function generateInstallments(
+    _option: InstallmentOption,
+    lastPayment: Payment
+  ) {
+    const _installments = [];
+    for (var i = 0; i < _option.numberOfInstallments; i++)
+      _installments.push({
+        id: i + 1,
+        value: _option.installmentValue,
+        completed: lastPayment.installments.at(i)?.completed ?? false,
+      });
+    return _installments;
+  }
+
+  function handlePaymentMethodChange(e: ChangeEvent<HTMLSelectElement>) {
+    if (!payment) return;
+
+    const _option = updateSelectedOption(e.target.value);
+    if (!_option) return;
+    
+    const _newInstallments = generateInstallments(_option, payment);
+
+    // Updating payment state with data from the new selected payment form
+    setNewPayment({
+      ...payment,
+      installments: _newInstallments,
+      downpayment:
+        payment.downpaymentStatus === "done"
+          ? payment.downpayment
+          : _option.installmentValue,
+    });
+  }
+
+  // Requesting payment data from backend
   const fetcher = ([userId, id]: [string, string]) =>
     requestPayment(userId, id);
   const { data: payment, error, isLoading } = useSWR(["111", "999"], fetcher);
   //setNewPayment(data);
 
-
-  //const installments = generateInstallmentsList(payment);
+  // Updating page for initial payment data
   useEffect(() => {
     if (payment) {
       const _installments = generateInstallmentOptions(payment);
-      console.log(_installments)
+      console.log(_installments);
       setInstallmentOptions(_installments);
       setSelectedOption(payment.installments.length);
       setNewPayment(payment);
     }
   }, [payment]);
+
 
   return (
     <form action={sendPaymentData} className="flex flex-wrap gap-7">
@@ -138,8 +180,10 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
         onChange={handlePaymentMethodChange}
       >
         {installmenOptions?.map((inst, i) => (
-          <option key={i} value={inst.id}>
-            {`${inst.id}x de ${formatToReais(inst.value)}`}
+          <option key={i} value={inst.numberOfInstallments}>
+            {`${inst.numberOfInstallments}x de ${formatToReais(
+              inst.installmentValue
+            )}`}
           </option>
         ))}
       </SelectField>
