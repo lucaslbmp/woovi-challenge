@@ -22,20 +22,34 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
   // const selectedMethod = paymentOptions.find(
   //   (method) => method.value === paymentMethod.value
   // );
-  const [newPayment, setNewPayment] = useState<Payment>();
+  //const [newPayment, setNewPayment] = useState<Payment>();
+  const {payment: newPayment, setPayment: setNewPayment} = usePaymentContext();
   const [selectedOption, setSelectedOption] = useState(1);
   const [installmenOptions, setInstallmentOptions] = useState<Installment[]>();
 
   function generateInstallmentOptions(payment?: Payment) {
+    console.log(payment)
     if (!payment) return [];
-    const list = [{ id: 1, value: payment.total, completed: false }];
+    // const list = [{ id: 1, value: payment.total, completed: payment.downpaymentStatus === "done" }];
+    const list =[]
 
-    const totalInstallmentsValue = payment.total - payment.downpayment;
+    const completedInstallments = payment.installments.filter(inst => inst.completed);
 
-    for (var i = 1; i < paymentOptions.length - 1; i++) {
+    list.push(...completedInstallments.map(inst => ({ id: inst.id, value: inst.value, completed: true })))
+
+    const lastIndex = payment.installments.findLastIndex(inst => inst.completed);
+
+    const totalDeducted =  (payment.downpaymentStatus === "done" ? payment.downpayment : 0) + completedInstallments.reduce((sum, inst) => sum + inst.value, 0)
+
+    const totalInstallmentsValue = payment.total - totalDeducted;
+    const calcInstallmentValue = (total: number) => payment.downpaymentStatus === "done" ? total/(i+1) : total/(i+2);
+
+    console.log(totalInstallmentsValue)
+
+    for (var i = lastIndex+1; i < paymentOptions.length - 1; i++) {
       list.push({
         id: i + 1,
-        value: totalInstallmentsValue / (i + 1),
+        value: calcInstallmentValue(totalInstallmentsValue),
         completed: false,
       });
     }
@@ -67,7 +81,7 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
         });
     //setInstallmentOptions(_installments);
 
-    setNewPayment({...payment, installments: _installments})
+    setNewPayment({...payment, installments: _installments, downpayment: payment.downpaymentStatus === "done" ? payment.downpayment : _option.value})
   }
 
   const fetcher = ([userId, id]: [string, string]) =>
@@ -75,20 +89,15 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
   const { data: payment, error, isLoading } = useSWR(["111", "999"], fetcher);
   //setNewPayment(data);
 
-  useEffect(() => {
-    // if (newPayment) {
-    //   const _installments = generateInstallmentOptions(newPayment);
-    //   setInstallmentOptions(_installments);
-    // }
-    console.log(newPayment);
-  }, [newPayment]);
+
   //const installments = generateInstallmentsList(payment);
   useEffect(() => {
     if (payment) {
       const _installments = generateInstallmentOptions(payment);
+      console.log(_installments)
       setInstallmentOptions(_installments);
       setSelectedOption(payment.installments.length);
-      
+      setNewPayment(payment);
     }
   }, [payment]);
 

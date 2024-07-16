@@ -52,26 +52,6 @@ export async function sendPaymentData(formData: FormData) {
   // Here we make API request to perform the payment operation
 }
 
-export async function buildPaymentSteps(payment: Payment) {
-  if (!payment?.installments?.length) return undefined;
-  const steps = [
-    {
-      description: "1ª entrada no PIX",
-      value: formatToReais(payment.downpayment),
-      completed: payment.downpaymentStatus === "done",
-      current: !payment.installments.at(0)?.completed,
-    },
-  ];
-  for (var i = 0; i < payment.installments.length; i++) {
-    steps.push({
-      description: i + 2 + "ª no cartão",
-      value: formatToReais(payment.installments?.at(i)?.value),
-      completed: steps?.at(i+1)?.completed ?? false,
-      current: !!steps?.at(i)?.completed,
-    });
-  }
-  return steps;
-}
 
 // export async function getPaymentSteps() {
 //   const cookieStore = cookies();

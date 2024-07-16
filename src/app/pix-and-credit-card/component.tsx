@@ -1,9 +1,9 @@
-import { formatToReais } from "@/utils/functions";
+import { buildPaymentSteps, formatToReais } from "@/utils/functions";
 import { StepsProgressBar } from "@/components/StepsProgressBar";
 import HRule from "@/components/HRule";
 import { redirect } from "next/navigation";
-import { buildPaymentSteps } from "@/actions";
 import { requestPayment } from "@/services";
+import PaymentsSteps from "@/components/PaymentsSteps";
 
 type PaymentDetailsPageProps = {
   children: React.ReactNode;
@@ -18,30 +18,23 @@ export default async function PaymentDetailsPage({
   // const fetcher = ([userId, id] : [string, string]) => getPayment(userId, id)
   // const {data: payment, error, isLoading} = useSWR(["111","999"], fetcher)
 
-  const payment = await requestPayment("111", "999")
+  //const payment = await requestPayment("111", "999")
   
   //const payment = await retrievePayment();
 
   
-  if (!payment) redirect("/");
+  //if (!payment) redirect("/");
   // const steps = await getPaymentSteps();
-  const steps =  await buildPaymentSteps(payment) ?? [];
+  //const steps =  buildPaymentSteps(payment) ?? [];
 
   return (
     <main className="font-nunito flex flex-col gap-8 m-4">
 
       {children}
 
-      <StepsProgressBar steps={steps} />
-
-      <HRule />
-
-      <div className="flex">
-        <span>CET: 0,5%</span>
-        <span className="text-right flex-1">
-          Total: {formatToReais(payment?.total ?? "-")}
-        </span>
-      </div>
+      {/* <StepsProgressBar steps={steps} /> */}
+      
+      <PaymentsSteps />
 
       <HRule />
 
