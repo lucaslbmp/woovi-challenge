@@ -24,6 +24,8 @@ export async function createPayment(userId: string, option: string) {
         "Content-Type": "application/json",
       },
     });
+    const data = response.json();
+    return data;
   } catch (err) {
     throw err;
   }

@@ -12,17 +12,16 @@ export async function paymentChoiceAction(prevState: any,formData: FormData) {
   try {
     const paymentOption = formData.get("payment") as string;
     if (!paymentOption) {
-      //toast("Nenhuma opção foi selecionada!");
       return {
         status: "error",
         message: "Nenhuma opção selecionada!"
       };
     }
-    await createPayment("111", paymentOption);
+    const response = await createPayment("111", paymentOption);
+
     return {status: "success", message: "Forma de pagamento escolhida com sucesso!"}
-    //redirect("/pix-and-credit-card/downpayment");
   } catch (err) {
-    return { status: "success", message: "Escolha de pagamento mal sucedida!"}
+    return { status: "error", message: "Escolha de pagamento mal sucedida!"}
   }
 }
 

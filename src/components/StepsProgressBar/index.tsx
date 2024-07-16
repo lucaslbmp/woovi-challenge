@@ -14,7 +14,7 @@ function StepTrace({ completed }: StepTraceProps) {
     <div
       className={`w-min h-8 border-l-2 
       ${completed ? "border-highlight" : "border-secondary"}
-      absolute left-2 bottom-3 -z-10`}
+      absolute left-[7px] bottom-3 -z-10`}
     ></div>
   );
 }

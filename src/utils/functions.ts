@@ -44,7 +44,7 @@ export function generateInstallmentOptions(
   // const list = [{ id: 1, value: payment.total, completed: payment.downpaymentStatus === "done" }];
   const list: InstallmentOption[] = [];
 
-  const completedInstallments = payment.installments.filter(
+  const completedInstallments = payment.installments?.filter(
     (inst) => inst.completed
   );
 
