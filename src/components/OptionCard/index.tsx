@@ -34,7 +34,7 @@ export default function OptionCard({
   return (
     <section
       className={
-        "rounded-[10px] border-2 border-secondary flex flex-col gap-1 p-5" +
+        "rounded-[10px] border-2 border-secondary flex flex-col gap-1 p-5 [&:has(input:checked)]:bg-highlightSecondary [&:has(input:checked)]:border-highlight [&:has(input:checked)]:border-b-2" +
         " " +
         className
       }
@@ -51,7 +51,7 @@ export default function OptionCard({
           </strong>
           <span>{installmentValueStr}</span>
         </div>
-        <Checkbox className="text-right" name="payment" value={value} />
+        <Checkbox id={value} className="text-right" name="payment" value={value} />
       </div>
       {highlighted && <span className="text-highlight">{highlighted}</span>}
       {tip && (

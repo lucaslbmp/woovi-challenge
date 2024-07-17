@@ -4,7 +4,6 @@ import { getRandomInt } from "../../utils/functions";
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 export default function Checkbox(props: CheckboxProps) {
-  const id = getRandomInt(1, 1000000).toString();
 
   return (
     <>
@@ -12,14 +11,14 @@ export default function Checkbox(props: CheckboxProps) {
         {...props}
         type="radio"
         //name={name}
-        id={id}
+        //id={id}
         //disabled={disabled}
         className="peer hidden"
       />
       <label
-        htmlFor={id}
+        htmlFor={props.id}
         className={
-          "w-[1.625rem] h-[1.625rem] border-secondary border-2 rounded-full peer-checked:bg-highlight cursor-pointer select-none float-right " + " "
+          "w-[1.625rem] h-[1.625rem] border-secondary border-2 rounded-full peer-checked:bg-highlight cursor-pointer select-none float-right" + " "
           + props.className
         }
       >
