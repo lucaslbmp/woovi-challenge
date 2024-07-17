@@ -20,7 +20,12 @@ import { storePayment } from "@/cookiesActions";
 import { generateInstallments } from "@/utils/functions.ts";
 import { generateInstallmentOptions } from "@/utils/functions.ts";
 import { Formik, FormikProps } from "formik";
+import PaymentFormSchema from "./schema";
 // import { deleteCookie, getCookie, getCookies, setCookie } from "cookies-next";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import MaskedInputComponent from "../InputComponents/MaskedInput";
+import DatePickerComponent from "../InputComponents/DatePicker";
 
 type PaymentFormProps = {
   paymentMethod: PaymentMethod;
@@ -106,6 +111,7 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
         cardCode: "",
         installmentsOption: "",
       }}
+      validationSchema={PaymentFormSchema}
       onSubmit={() => {}}
     >
       {(props: FormikProps<PaymentFormikProps>) => (
@@ -118,7 +124,14 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
           />
           <InputField
             name="cpf"
-            mask="999.999.999-99"
+            //mask="999.999.999-99"
+            mask={[
+              /\d/, /\d/, /\d/, '.',
+              /\d/, /\d/, /\d/, '.',
+              /\d/, /\d/, /\d/, '-',
+              /\d/, /\d/
+            ]}
+            component={MaskedInputComponent}
             label="CPF"
             placeholder="XXX.XXX.XXX-XX"
             className="flex-grow basis-[16rem]"
@@ -131,9 +144,11 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
           />
           <InputField
             name="cardExpiration"
-            type="date"
+            component={MaskedInputComponent}
             label="Vencimento"
-            placeholder="dd/mm"
+            mask={[/\d/, /\d/, '/',/\d/, /\d/]}
+            guide={false}
+            placeholder="mm/aa"
             className="flex-grow basis-[8em]"
           />
           <InputField
