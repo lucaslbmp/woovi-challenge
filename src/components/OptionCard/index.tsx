@@ -29,7 +29,7 @@ export default function OptionCard({
 }: OptionCardProps) {
   const installmentValueStr = formatToReais(installmentValue);
 
-  const totalStr = formatToReais(total);
+  const totalStr = total ? formatToReais(total) : 0;
 
   return (
     <section

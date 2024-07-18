@@ -6,11 +6,13 @@ import OptionCard from "../OptionCard";
 import OptionCardsColumn from "../OptionCardsColumn";
 import { paymentOptions } from "@/app/api/data";
 import { useFormState } from "react-dom";
-import {  useEffect } from "react";
+import { useEffect } from "react";
 import { generateToast } from "../Toast/toastMsg";
 import { redirect } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function PaymentOptionForm() {
+  const t_cta = useTranslations("CTA");
   const [state, formAction] = useFormState(paymentChoiceAction, {
     status: "pending",
     message: "",
@@ -18,7 +20,8 @@ export default function PaymentOptionForm() {
 
   useEffect(() => {
     generateToast(state);
-    if(state.status === "success") redirect("/pix-and-credit-card/downpayment");
+    if (state.status === "success")
+      redirect("/pix-and-credit-card/downpayment");
   }, [state]);
 
   return (
@@ -29,7 +32,7 @@ export default function PaymentOptionForm() {
         title="Pix Parcelado"
       />
       <Button className="w-[50%] max-w-[16rem] mx-auto" type="submit">
-        Avançar
+        {t_cta("next")}
       </Button>
     </form>
   );
