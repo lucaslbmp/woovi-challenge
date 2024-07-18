@@ -1,31 +1,25 @@
 "use client";
 
 import {
-  Installment,
   InstallmentOption,
-  Payment,
   PaymentMethod,
 } from "@/types";
 import InputField from "../InputField";
-import SelectField from "../SelectField";
 import { paymentOptions } from "../../app/api/data";
 import { formatToReais } from "@/utils/functions.ts";
 import Button from "../Button";
-import { sendPaymentData, setCurrentPaymentMethod } from "@/actions";
-import { ChangeEvent, use, useCallback, useEffect, useState } from "react";
-import { createPayment, requestPayment } from "@/services";
+import { sendPaymentData } from "@/actions";
+import { ChangeEvent, useEffect, useState } from "react";
+import {  requestPayment } from "@/services";
 import { usePaymentContext } from "@/contexts/global-context";
 import useSWR from "swr";
-import { storePayment } from "@/cookiesActions";
 import { generateInstallments } from "@/utils/functions.ts";
 import { generateInstallmentOptions } from "@/utils/functions.ts";
 import { Formik, FormikProps } from "formik";
 import PaymentFormSchema from "./schema";
-// import { deleteCookie, getCookie, getCookies, setCookie } from "cookies-next";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import MaskedInputComponent from "../InputComponents/MaskedInput";
-import DatePickerComponent from "../InputComponents/DatePicker";
+import { useTranslations } from "next-intl";
 
 type PaymentFormProps = {
   paymentMethod: PaymentMethod;
@@ -41,10 +35,10 @@ type PaymentFormikProps = {
 };
 
 export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
-  // const selectedMethod = paymentOptions.find(
-  //   (method) => method.value === paymentMethod.value
-  // );
-  //const [newPayment, setNewPayment] = useState<Payment>();
+  const t = useTranslations("FormsLabels");
+  const t_cta = useTranslations("CTA");
+  const t_common = useTranslations("Common");
+
   const { payment: newPayment, setPayment: setNewPayment } =
     usePaymentContext();
   const [selectedOption, setSelectedOption] = useState(1);
@@ -94,7 +88,6 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
   useEffect(() => {
     if (payment) {
       const _installments = generateInstallmentOptions(payment, paymentOptions);
-      console.log(_installments);
       setInstallmentOptions(_installments);
       setSelectedOption(payment.installments.length);
       setNewPayment(payment);
@@ -118,13 +111,12 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
         <form action={sendPaymentData} className="flex flex-wrap gap-7">
           <InputField
             name="name"
-            label="Nome completo"
-            placeholder="Nome completo"
+            label={t("completeName")}
+            placeholder={t("completeName")}
             className="flex-grow basis-[26rem]"
           />
           <InputField
             name="cpf"
-            //mask="999.999.999-99"
             mask={[
               /\d/, /\d/, /\d/, '.',
               /\d/, /\d/, /\d/, '.',
@@ -132,20 +124,20 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
               /\d/, /\d/
             ]}
             component={MaskedInputComponent}
-            label="CPF"
+            label={t("ssn")}
             placeholder="XXX.XXX.XXX-XX"
             className="flex-grow basis-[16rem]"
           />
           <InputField
             name="cardNumber"
-            label="Número do cartão"
-            placeholder="Número do cartão"
+            label={t("cardNumber")}
+            placeholder="0000 0000 0000 0000"
             className="flex-grow basis-[16em]"
           />
           <InputField
             name="cardExpiration"
             component={MaskedInputComponent}
-            label="Vencimento"
+            label={t("expirationDate")}
             mask={[/\d/, /\d/, '/',/\d/, /\d/]}
             guide={false}
             placeholder="mm/aa"
@@ -153,7 +145,7 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
           />
           <InputField
             name="cardCode"
-            label="CVV"
+            label={t("cvv")}
             maxLength={3}
             placeholder="XXX"
             className="flex-grow basis-[8em]"
@@ -161,21 +153,21 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
           <InputField
             as="select"
             name="installments-option"
-            label="Parcelas"
+            label={t("installments")}
             className="flex-grow basis-[16em]"
             value={selectedOption}
             onChange={handlePaymentMethodChange}
           >
             {installmenOptions?.map((inst, i) => (
               <option key={i} value={inst.numberOfInstallments}>
-                {`${inst.numberOfInstallments}x de ${formatToReais(
+                {`${inst.numberOfInstallments}x ${t_common("of")} ${formatToReais(
                   inst.installmentValue
                 )}`}
               </option>
             ))}
           </InputField>
           <div className="flex basis-full justify-center">
-            <Button className="w-full max-w-[27rem]">Pagar</Button>
+            <Button className="w-full max-w-[27rem]">{t_cta("pay")}</Button>
           </div>
         </form>
       )}

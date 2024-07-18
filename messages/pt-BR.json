@@ -1,0 +1,63 @@
+{
+  "Common": {
+    "of": "de"
+  },
+  "LocaleSwitcher": {
+    "label": "Mudar linguagem",
+    "locale": "{locale, select, ptBR {Português} en {English} other {Unknown}}"
+  },
+  "FormsLabels": {
+    "completeName": "Nome completo",
+    "ssn": "CPF",
+    "cardNumber": "Número do cartão",
+    "cvv": "CVV",
+    "expirationDate": "Vencimento",
+    "installments": "Parcelas"
+  },
+  "CTA": {
+    "pay": "Pagar",
+    "next": "Avançar"
+  },
+  "PaymentSteps": {
+    "index": {
+      "st": "{num} ª",
+      "nd": "{num} ª",
+      "rd": "{num} ª",
+      "th": "{num}th"
+    },
+    "withCredit": "no cartão",
+    "withPix": "no Pix",
+    "tec": "CET",
+    "total": "Total"
+  },
+  "QRCodeInterface": {
+    "deadline": "Prazo de pagamento",
+    "buttonLabel": "Clique aqui para copiar QR CODE"
+  },
+  "Screens": {
+    "PaymentMethodScreen": {
+      "title": "João, como você quer pagar?"
+    },
+    "PaymentScreen": {
+      "Downpayment": {
+        "title": "{user}, pague a entrada de {value} pelo Pix"
+      },
+      "Installments": {
+        "title": "{user}, pague o restante em {numberOfInstallments}x no cartão"
+      },
+      "Common": {
+        "identifier": "Identificador",
+        "howDoesItWork": "Como funciona?"
+      }
+    }
+  },
+  "Footer": {
+    "safePayment": "Pagamento 100% seguro via:"
+  },
+  "Error": {
+    "nameRequired": "Nome requerido",
+    "SSNInvalid": "CPF inválido",
+    "cardNumberInvalid": "Número de cartão inválido",
+    "cardExpired": "Cartão expirado"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "Common": {
+    "of": "of"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, ptBR {Português} en {English} other {Unknown}}"
+  },
+  "FormsLabels": {
+    "completeName": "Complete name",
+    "ssn": "SSN",
+    "cardNumber": "Card number",
+    "cvv": "CVV",
+    "expirationDate": "Expiration date",
+    "installments": "Installments"
+  },
+  "CTA": {
+    "pay": "Pay",
+    "next": "Next"
+  },
+  "PaymentSteps": {
+    "index": {
+      "st": "{num}st`",
+      "nd": "{num}nd",
+      "rd": "{num}rd",
+      "th": "{num}th"
+    },
+    "withCredit": "with credit card",
+    "withPix": "with Pix",
+    "tec": "TEC",
+    "total": "Total"
+  },
+  "QRCodeInterface": {
+    "deadline": "Payment deadline",
+    "buttonLabel": "Click here to copy the QR Code"
+  },
+  "Screens": {
+    "PaymentMethodScreen": {
+      "title": "João, how do you want to pay?"
+    },
+    "PaymentScreen": {
+      "Downpayment": {
+        "title": "{user}, pay the down payment of {value} with Pix"
+      },
+      "Installments": {
+        "title": "{user}, pay the remainder in {numberOfInstallments}x with card"
+      },
+      "Common": {
+        "identifier": "Identifier",
+        "howDoesItWork": "How does it work?"
+      }
+    }
+  },
+  "Footer": {
+    "safePayment": "100% safe payment via:"
+  },
+  "Error": {
+    "nameRequired": "Name required",
+    "SSNInvalid": "SSN invalid",
+    "cardNumberInvalid": "Invalid card number ",
+    "cardExpired": "Card expired"
+  }
+}
