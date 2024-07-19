@@ -1,6 +1,6 @@
 This project is part of Woovi Challenge and tries to replicate a payment system based on a [Figma design](https://www.figma.com/design/hv1LgD7oNrtlmfWgKBG6PF/Woovi-Desafio-Front?node-id=0-1&t=Hd7OKLnHG7qjHH7i-0).
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project and uses TailwindCSS library for styling.
 
 ## Getting Started
 
