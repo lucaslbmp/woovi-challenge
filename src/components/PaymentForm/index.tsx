@@ -15,14 +15,15 @@ import { usePaymentContext } from "@/contexts/global-context";
 import useSWR from "swr";
 import { generateInstallments } from "@/utils/functions.ts";
 import { generateInstallmentOptions } from "@/utils/functions.ts";
-import { Formik, FormikProps } from "formik";
+import { Formik, FormikProps, FormikValues } from "formik";
 import PaymentFormSchema from "./schema";
 import "react-datepicker/dist/react-datepicker.css";
 import MaskedInputComponent from "../InputComponents/MaskedInput";
 import { useTranslations } from "next-intl";
+import { redirect } from "next/navigation";
 
 type PaymentFormProps = {
-  paymentMethod: PaymentMethod;
+  
 };
 
 type PaymentFormikProps = {
@@ -34,7 +35,7 @@ type PaymentFormikProps = {
   installmentsOption: string;
 };
 
-export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
+export default function PaymentForm() {
   const t = useTranslations("FormsLabels");
   const t_cta = useTranslations("CTA");
   const t_common = useTranslations("Common");
@@ -78,6 +79,10 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
     });
   }
 
+  function handleSubmit(values: FormikValues){
+    
+  }
+
   // Requesting payment data from backend
   const fetcher = ([userId, id]: [string, string]) =>
     requestPayment(userId, id);
@@ -105,9 +110,9 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
         installmentsOption: "",
       }}
       validationSchema={PaymentFormSchema}
-      onSubmit={() => {}}
+      onSubmit={handleSubmit}
     >
-      {(props: FormikProps<PaymentFormikProps>) => (
+      {(formik: FormikProps<PaymentFormikProps>) => (
         <form action={sendPaymentData} className="flex flex-wrap gap-7">
           <InputField
             name="name"
@@ -117,6 +122,7 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
           />
           <InputField
             name="cpf"
+            autoComplete="off"
             mask={[
               /\d/, /\d/, /\d/, '.',
               /\d/, /\d/, /\d/, '.',
@@ -167,7 +173,7 @@ export default function PaymentForm({ paymentMethod }: PaymentFormProps) {
             ))}
           </InputField>
           <div className="flex basis-full justify-center">
-            <Button className="w-full max-w-[27rem]">{t_cta("pay")}</Button>
+            <Button disabled={!formik.isValid || formik.isSubmitting || !formik.dirty} className="w-full max-w-[27rem]">{t_cta("pay")}</Button>
           </div>
         </form>
       )}

@@ -5,11 +5,10 @@ import { qrCodeFormAction } from "@/actions";
 import { useTranslations } from "next-intl";
 
 type QRCodeInterfaceProps = {
-  currPaymentMethod: PaymentMethod;
 };
 
 export default function QRCodeInterface({
-  currPaymentMethod,
+  
 }: QRCodeInterfaceProps) {
   const t = useTranslations("QRCodeInterface");
   const t_cta = useTranslations("CTA");

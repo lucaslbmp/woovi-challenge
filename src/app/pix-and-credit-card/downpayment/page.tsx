@@ -1,16 +1,17 @@
-import { paymentOptions } from "../../api/data";
+import {  paymentOptions } from "../../api/data";
 import QRCodeInterface from "@/components/QRCodeInterface";
 import { redirect } from "next/navigation";
-import { getCurrentPaymentMethod } from "@/actions";
 import PageTitle from "@/components/PageTitle";
 import { formatToReais } from "@/utils/functions";
 import { getTranslations } from "next-intl/server";
+import { requestPayment } from "@/services";
 
 export default async function DownPaymentSection() {
   const t = await getTranslations("Screens.PaymentScreen.Downpayment");
 
-  const currPaymentMethod = await getCurrentPaymentMethod(paymentOptions);
-  if (!currPaymentMethod) redirect("/");
+  // const currPaymentMethod = await getCurrentPaymentMethod(paymentOptions);
+  // if (!currPaymentMethod) redirect("/");
+  const payment = await requestPayment("111","999");
 
   return (
     <>
@@ -21,15 +22,12 @@ export default async function DownPaymentSection() {
         text={
           t("title", {
           user: "João",
-          value: formatToReais(currPaymentMethod?.installmentValue),
+          value: formatToReais(payment.downpayment),
         })
       }
       />
-      <QRCodeInterface currPaymentMethod={currPaymentMethod} />
+      <QRCodeInterface />
     </>
   );
-}
-function getTranslator(arg0: any, arg1: string) {
-  throw new Error("Function not implemented.");
 }
 

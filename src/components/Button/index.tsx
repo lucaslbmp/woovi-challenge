@@ -7,7 +7,7 @@ export default function Button(props: ButtonProps) {
     <button
       {...props}
       className={
-        "bg-primary text-textTerciary rounded-md py-2 px-5 text-lg" +
+        "bg-primary text-textTerciary rounded-md py-2 px-5 text-lg disabled:bg-slate-600" +
         " " +
         props.className
       }

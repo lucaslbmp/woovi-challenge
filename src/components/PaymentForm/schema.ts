@@ -18,6 +18,7 @@ const PaymentFormSchema = Yup.object().shape({
   cardExpiration: Yup.string()
     .required("Campo obrigatório")
     .test("is-card-expired", "Cartão vencido", (val) => isExpired(val)),
+  cardCode: Yup.string().required("Campo obrigatório"),
 });
 
 export default PaymentFormSchema;
