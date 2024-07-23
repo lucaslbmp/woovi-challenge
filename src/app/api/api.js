@@ -63,27 +63,6 @@ app.post("/user/:userId/payments/create", async (req, res) => {
   })
 });
 
-// app.post("/payments/:id/history", async (req, res) => {
-//   const { id } = req.body;
-//   const paymentMethod = paymentOptions.find((method) => method.value === id);
-//   const steps = await buildPaymentSteps(paymentMethod);
-//   updatePaymentHistory(steps);
-//   return res.json({
-//     message: "History created successfully!",
-//   });
-// });
-
-// app.get("/payments/:id/history", async (req, res) => {
-//   return res.json({
-//     paymentHistory: getPaymentHistory(),
-//   });
-// });
-
-// description: string;
-// value: string;
-// completed: boolean;
-// selected: boolean;
-
 app.patch("/user/:userId/payments/:paymentId/execute/downpayment", async (req, res) => {
   const payment = getPayment();
   setPayment({

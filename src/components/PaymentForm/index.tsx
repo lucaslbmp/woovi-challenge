@@ -87,6 +87,7 @@ export default function PaymentForm() {
   const fetcher = ([userId, id]: [string, string]) =>
     requestPayment(userId, id);
   const { data: payment, error, isLoading } = useSWR(["111", "999"], fetcher);
+  
   //setNewPayment(data);
 
   // Updating page for initial payment data
@@ -94,10 +95,15 @@ export default function PaymentForm() {
     if (payment) {
       const _installments = generateInstallmentOptions(payment, paymentOptions);
       setInstallmentOptions(_installments);
-      setSelectedOption(payment.installments.length);
+      setSelectedOption(payment?.installments?.length ?? 1);
       setNewPayment(payment);
     }
   }, [payment]);
+  
+  useEffect(() => {
+    console.log(isLoading , payment, Object.keys(payment ?? {}).length)
+    if(!isLoading && payment && Object.keys(payment).length === 0)      redirect("/");
+  }, [isLoading])
 
   return (
     <Formik

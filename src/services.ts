@@ -1,6 +1,18 @@
 import { Payment } from "./types";
 
-const baseUrl = "http://localhost:8000";
+//const baseUrl = "http://localhost:8000";
+const baseUrl = "/api";
+
+export async function requestPaymentOptions(){
+  try{
+    const response = await fetch(`${baseUrl}/payments/options`);
+    
+    const data = response.json();
+    return data;
+  } catch(err){
+    throw err;
+  }
+}
 
 export async function requestPayment(userId: string, paymentId: string) {
   try {

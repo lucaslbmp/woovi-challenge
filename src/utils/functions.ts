@@ -6,20 +6,24 @@ export function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
 }
 
-export function checkCpf(cpf: string){
-    cpf = cpf.replace(/\D/g, '');
-    if(cpf.toString().length != 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-    var result = true;
-    [9,10].forEach(function(j){
-        var soma = 0, r;
-        cpf.split(/(?=)/).splice(0,j).forEach(function(e, i){
-            soma += parseInt(e) * ((j+2)-(i+1));
-        });
-        r = soma % 11;
-        r = (r <2)?0:11-r;
-        if(String(r) !== cpf.substring(j, j+1)) result = false;
-    });
-    return result;
+export function checkCpf(cpf: string) {
+  cpf = cpf.replace(/\D/g, "");
+  if (cpf.toString().length != 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+  var result = true;
+  [9, 10].forEach(function (j) {
+    var soma = 0,
+      r;
+    cpf
+      .split(/(?=)/)
+      .splice(0, j)
+      .forEach(function (e, i) {
+        soma += parseInt(e) * (j + 2 - (i + 1));
+      });
+    r = soma % 11;
+    r = r < 2 ? 0 : 11 - r;
+    if (String(r) !== cpf.substring(j, j + 1)) result = false;
+  });
+  return result;
 }
 
 export function formatToReais(value: number) {
@@ -52,8 +56,7 @@ export function buildPaymentSteps(payment: Payment | undefined) {
 
 export function generateInstallmentOptions(
   payment: Payment | undefined,
-  paymentOptions: PaymentMethod[],
-  
+  paymentOptions: PaymentMethod[]
 ) {
   console.log(payment);
   if (!payment) return [];
@@ -64,20 +67,21 @@ export function generateInstallmentOptions(
     (inst) => inst.completed
   );
 
-  list.push(
-    ...completedInstallments.map((inst) => ({
-      numberOfInstallments: inst.id,
-      installmentValue: inst.value,
-    }))
-  );
+  const optionsForCompletedSteps = completedInstallments?.map((inst) => ({
+    numberOfInstallments: inst.id,
+    installmentValue: inst.value,
+  }));
 
-  const lastIndex = payment.installments.findLastIndex(
+  if (optionsForCompletedSteps) 
+    list.push(...optionsForCompletedSteps);
+
+  const lastIndex = payment?.installments?.findLastIndex(
     (inst) => inst.completed
   );
 
   const totalDeducted =
     (payment.downpaymentStatus === "done" ? payment.downpayment : 0) +
-    completedInstallments.reduce((sum, inst) => sum + inst.value, 0);
+    completedInstallments?.reduce((sum, inst) => sum + inst.value, 0) ?? 0;
 
   const totalInstallmentsValue = payment.total - totalDeducted;
   const calcInstallmentValue = (total: number) =>
@@ -86,7 +90,7 @@ export function generateInstallmentOptions(
   console.log(totalInstallmentsValue);
 
   for (var i = lastIndex + 1; i < paymentOptions.length - 1; i++) {
-    list.push({
+    list?.push({
       numberOfInstallments: i + 1,
       installmentValue: calcInstallmentValue(totalInstallmentsValue),
     });
