@@ -2,7 +2,6 @@ import { getPayment, paymentOptions, setPayment } from '@/app/api/data'
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request, res: Response) {
-    console.log(req)
     const { optionId } = await req.json();
     const option = paymentOptions.find((method) => method.value === optionId);
     if(!option) return;
@@ -29,8 +28,9 @@ export async function POST(req: Request, res: Response) {
         total: total,
         installments: _installments,
       });
-
-  return NextResponse.json(getPayment())
+    const _newPayment = getPayment();
+    console.log('new pay: ',_newPayment)
+  return NextResponse.json(_newPayment)
 }
 
 

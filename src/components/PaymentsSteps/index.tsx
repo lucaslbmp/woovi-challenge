@@ -9,6 +9,7 @@ import { requestPayment } from "@/services";
 import useSWR from "swr";
 import { Step } from "@/types";
 import { useTranslations } from "next-intl";
+import { useSWRFetch } from "@/utils/fetch";
 
 export default function PaymentSteps() {
     const t = useTranslations("PaymentSteps");
@@ -16,9 +17,9 @@ export default function PaymentSteps() {
   //if(!payment) redirect("/");
   const [steps, setSteps] = useState<Step[]>();
 
-  const fetcher = ([userId, id]: [string, string]) =>
-    requestPayment(userId, id);
-  const { data: dbPayment, error, isLoading } = useSWR(["111", "999"], fetcher);
+  // const fetcher = ([userId, id]: [string, string]) =>
+  //   requestPayment(userId, id);
+  const { data: dbPayment, error, isLoading } = useSWRFetch(requestPayment, "111", "999");
 
   useEffect(() => {
     setPayment(dbPayment);

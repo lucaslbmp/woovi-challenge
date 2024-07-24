@@ -18,10 +18,10 @@ export async function paymentChoiceAction(prevState: any,formData: FormData) {
       };
     }
     const response = await createPayment("111", paymentOption);
-
+    
     return {status: "success", message: "Forma de pagamento escolhida com sucesso!"}
   } catch (err) {
-    return { status: "error", message: "Escolha de pagamento mal sucedida!"}
+    return { status: "error", message: "Erro ao gerar pagamento!"}
   }
 }
 

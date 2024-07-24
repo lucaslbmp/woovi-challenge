@@ -10,8 +10,9 @@ import { useEffect } from "react";
 import { generateToast } from "../Toast/toastMsg";
 import { redirect } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { requestPayment, requestPaymentOptions } from "@/services";
 import useSWR from "swr";
+import { requestPayment, requestPaymentOptions } from "@/services";
+import { useSWRFetch } from "@/utils/fetch";
 
 export default function PaymentOptionForm() {
   const t_cta = useTranslations("CTA");
@@ -20,11 +21,8 @@ export default function PaymentOptionForm() {
     message: "",
   });
 
-  //const fetcher = ([]) => requestPaymentOptions();
-  // const { data: paymentOptions, error, isLoading } = useSWR([], fetcher);
-  
-  const fetcher = () => fetch('https://api.github.com/users/manishmshiva');
-  const { data, error, isLoading } = useSWR([], fetcher);
+
+  const { data, error, isLoading } = useSWRFetch(requestPaymentOptions)
 
   useEffect(() => {
     console.log(data);

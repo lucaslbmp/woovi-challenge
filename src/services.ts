@@ -1,13 +1,13 @@
 import { Payment } from "./types";
 
 //const baseUrl = "http://localhost:8000";
-const baseUrl = "/api";
+const baseUrl = "http://localhost:3000/api";
 
-export async function requestPaymentOptions(){
+export async function requestPaymentOptions() {
   try{
     const response = await fetch(`${baseUrl}/payments/options`);
-    
-    const data = response.json();
+    if(!response.ok) throw new Error("");
+    const data = await response.json();
     return data;
   } catch(err){
     throw err;
@@ -16,7 +16,7 @@ export async function requestPaymentOptions(){
 
 export async function requestPayment(userId: string, paymentId: string) {
   try {
-    const response = await fetch(`${baseUrl}/user/${userId}/payments/${paymentId}`);
+    const response = await fetch(`${baseUrl}/user/${userId}/payments/${paymentId}`, {cache: "no-cache"});
     if(!response.ok) throw new Error("");
     const _payment = await response.json();
     return _payment as Payment;
@@ -35,7 +35,10 @@ export async function createPayment(userId: string, option: string) {
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-cache"
     });
+    console.log(response);
+    if(!response.ok) throw new Error(""); 
     const data = response.json();
     return data;
   } catch (err) {
@@ -56,6 +59,7 @@ export async function executeDownpayment(userId: string, paymentId: string) {
         headers: {
           "Content-Type": "application/json",
         },
+        cache: "no-cache"
       }
     );
     return response;

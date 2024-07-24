@@ -21,6 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import MaskedInputComponent from "../InputComponents/MaskedInput";
 import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
+import { useSWRFetch } from "@/utils/fetch";
 
 type PaymentFormProps = {
   
@@ -84,11 +85,8 @@ export default function PaymentForm() {
   }
 
   // Requesting payment data from backend
-  const fetcher = ([userId, id]: [string, string]) =>
-    requestPayment(userId, id);
-  const { data: payment, error, isLoading } = useSWR(["111", "999"], fetcher);
-  
-  //setNewPayment(data);
+
+  const { data: payment, error, isLoading } = useSWRFetch(requestPayment,"111", "999")
 
   // Updating page for initial payment data
   useEffect(() => {
