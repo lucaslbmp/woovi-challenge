@@ -37,9 +37,9 @@ export async function createPayment(userId: string, option: string) {
       },
       cache: "no-cache"
     });
-    console.log(response);
     if(!response.ok) throw new Error(""); 
-    const data = response.json();
+    const data = await response.json();
+    console.log(data);
     return data;
   } catch (err) {
     throw err;

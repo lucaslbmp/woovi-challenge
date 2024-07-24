@@ -9,10 +9,8 @@ type OptionCardProps = {
   numberOfInstallments: number;
   installmentValue: number;
   highlighted?: string;
-  tip?: {
-    highlight: string;
-    text: string;
-  };
+  tip_highlight?: string;
+  tip_text?: string;
   total?: number;
   className?: string;
 };
@@ -23,7 +21,8 @@ export default function OptionCard({
   numberOfInstallments,
   installmentValue,
   highlighted,
-  tip,
+  tip_highlight,
+  tip_text,
   total,
   className,
 }: OptionCardProps) {
@@ -54,12 +53,12 @@ export default function OptionCard({
         <Checkbox id={value} className="text-right" name="payment" value={value} />
       </div>
       {highlighted && <span className="text-highlight">{highlighted}</span>}
-      {tip && (
+      {tip_text && tip_highlight && (
         <div>
           <Tip>
             <span>
-              <b>{tip.highlight}</b>
-              {tip.text.replace(tip.highlight, "")}
+              <b>{tip_highlight}</b>
+              {tip_text.replace(tip_highlight, "")}
             </span>
           </Tip>
         </div>

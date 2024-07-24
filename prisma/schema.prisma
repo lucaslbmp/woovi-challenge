@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Payment {
+  id                Int           @id @default(autoincrement())
+  downpayment       Float
+  downpaymentStatus String
+  total             Float
+  installments      Installment[]
+}
+
+model Installment {
+  id        Int     @id @default(autoincrement())
+  value     Float
+  completed Boolean
+  paymentId Int
+  payment   Payment @relation(fields: [paymentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model PaymentOption {
+  id                   Int    @id @default(autoincrement())
+  value                String
+  numberOfInstallments Int
+  installmentValue     Float
+  highlighted          String?
+  tip_highlight        String?
+  tip_text             String?
+  total                Float?
+}

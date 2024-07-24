@@ -1,3 +1,5 @@
+let payment = {};
+
 module.exports = {
   paymentOptions: [
     {
@@ -5,10 +7,8 @@ module.exports = {
       numberOfInstallments: 1,
       installmentValue: 30500,
       highlighted: "Ganhe 3% de Cashback",
-      tip: {
-        highlight: "300,00",
-        text: "🤑 300,00 de volta no seu Pix na hora"
-      },
+      tip_highlight: "300,00",
+      tip_text: "🤑 300,00 de volta no seu Pix na hora",
     },
     {
       value: "opt2",
@@ -28,10 +28,8 @@ module.exports = {
       value: "opt4",
       numberOfInstallments: 4,
       installmentValue: 7725,
-      tip: {
-        highlight: "-3% de juros:",
-        text: "-3% de juros: Melhor opção de parcelamento"
-      },
+      tip_highlight: "-3% de juros:",
+      tip_text: "-3% de juros: Melhor opção de parcelamento",
       total: 30900,
     },
 
@@ -57,19 +55,11 @@ module.exports = {
     },
   ],
 
-  payment: {},
-  setPayment: (payment) => {
-    module.exports.payment = {...payment}
+  setPayment: (newPayment) => {
+    payment = { ...newPayment };
+    console.log("updated pay: ", payment);
   },
   getPayment: () => {
-    return  module.exports.payment;
+    return payment;
   },
-
-  paymentHistory: [],
-  updatePaymentHistory: (newHistory) =>{ 
-    module.exports.paymentHistory = [...newHistory]
-  },
-  getPaymentHistory: () => {
-    return  module.exports.paymentHistory;
-  }
 };

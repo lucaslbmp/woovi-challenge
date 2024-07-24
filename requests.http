@@ -10,6 +10,11 @@ GET {{base_url}}/user/111/payments/999
 content-type: application/json
 
 ###
+DELETE {{base_url}}/user/111/payments/999
+content-type: application/json
+
+
+###
 POST {{base_url}}/user/111/payments/create
 content-type: application/json
 
