@@ -16,7 +16,7 @@ import PaymentFormSchema from "./schema";
 import "react-datepicker/dist/react-datepicker.css";
 import MaskedInputComponent from "../InputComponents/MaskedInput";
 import { useTranslations } from "next-intl";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { useSWRFetch } from "@/utils/fetch";
 
 type PaymentFormProps = {};
@@ -34,6 +34,7 @@ export default function PaymentForm() {
   const t = useTranslations("FormsLabels");
   const t_cta = useTranslations("CTA");
   const t_common = useTranslations("Common");
+  const {paymentId} = useParams<{paymentId: string}>();
 
   const { payment: newPayment, setPayment: setNewPayment } =
     usePaymentContext();
@@ -81,7 +82,7 @@ export default function PaymentForm() {
     data: payment,
     error,
     isLoading,
-  } = useSWRFetch(requestPayment, "111", "5");
+  } = useSWRFetch(requestPayment, "111", paymentId);
 
   // Requesting payment options
   const {
@@ -93,12 +94,13 @@ export default function PaymentForm() {
   // Updating page for initial payment data
   useEffect(() => {
     if (payment) {
+      if(!paymentOptions) return;
       const _installments = generateInstallmentOptions(payment, paymentOptions);
       setInstallmentOptions(_installments);
       setSelectedOption(payment?.installments?.length ?? 1);
       setNewPayment(payment);
     }
-  }, [payment]);
+  }, [payment, paymentOptions]);
 
   useEffect(() => {
     console.log(isLoading, payment, Object.keys(payment ?? {}).length);

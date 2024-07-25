@@ -12,7 +12,8 @@
     "cardNumber": "Card number",
     "cvv": "CVV",
     "expirationDate": "Expiration date",
-    "installments": "Installments"
+    "installments": "Installments",
+    "ammountPayable": "Ammount payable"
   },
   "CTA": {
     "pay": "Pay",

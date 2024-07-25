@@ -5,14 +5,16 @@
 GET {{base_url}}/payments/options
 content-type: application/json
 
-### Get payment 999
+### Get payment 1
 GET {{base_url}}/user/111/payments/1
 content-type: application/json
 
-### Delete payment 999
-DELETE {{base_url}}/user/111/payments/1
+### Delete payment 1
+DELETE {{base_url}}/user/111/payments/4
 content-type: application/json
 
+### Get all payments from one user
+GET {{base_url}}/user/111/payments
 
 ### Create payment
 POST {{base_url}}/user/111/payments

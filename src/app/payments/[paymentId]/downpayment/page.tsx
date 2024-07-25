@@ -1,16 +1,23 @@
 import QRCodeInterface from "@/components/QRCodeInterface";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import PageTitle from "@/components/PageTitle";
 import { formatToReais } from "@/utils/functions";
 import { getTranslations } from "next-intl/server";
 import { requestPayment } from "@/services";
 
-export default async function DownPaymentSection() {
-  const t = await getTranslations("Screens.PaymentScreen.Downpayment");
+type SectionProps = {
+  params:{
+    paymentId: string;
+  }
+}
 
-  // const currPaymentMethod = await getCurrentPaymentMethod(paymentOptions);
-  // if (!currPaymentMethod) redirect("/");
-  const payment = await requestPayment("111","5");
+export default async function DownPaymentSection({
+  params
+}: SectionProps) {
+  const t = await getTranslations("Screens.PaymentScreen.Downpayment");
+  const {paymentId} = params;
+
+  const payment = await requestPayment("111", paymentId);
   if(!payment)  redirect("/");
   if(!(Object.keys(payment).length)) redirect("/");
 
@@ -27,7 +34,7 @@ export default async function DownPaymentSection() {
         })
       }
       />
-      <QRCodeInterface />
+      <QRCodeInterface paymentId={paymentId}/>
     </>
   );
 }

@@ -12,7 +12,8 @@
     "cardNumber": "Número do cartão",
     "cvv": "CVV",
     "expirationDate": "Vencimento",
-    "installments": "Parcelas"
+    "installments": "Parcelas",
+    "ammountPayable": "Valor a pagar" 
   },
   "CTA": {
     "pay": "Pagar",

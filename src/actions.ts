@@ -4,33 +4,37 @@ import { redirect } from "next/navigation";
 import { createPayment, executeDownpayment } from "./services";
 //import {toast} from 'react-toastify'
 
-export async function paymentChoiceAction(prevState: any,formData: FormData) {
+export async function paymentChoiceAction(prevState: any, formData: FormData) {
   try {
     const paymentOption = formData.get("payment") as string;
     if (!paymentOption) {
       return {
         status: "error",
-        message: "Nenhuma opção selecionada!"
+        message: "Nenhuma opção selecionada!",
       };
     }
-    const response = await createPayment("111", paymentOption);
-    
-    return {status: "success", message: "Forma de pagamento escolhida com sucesso!"}
+    const payment = await createPayment("111", paymentOption);
+
+    return {
+      status: "success",
+      message: "Forma de pagamento escolhida com sucesso!",
+      state: JSON.stringify(payment),
+    };
   } catch (err) {
-    return { status: "error", message: "Erro ao gerar pagamento!"}
+    return { status: "error", message: "Erro ao gerar pagamento!" };
   }
 }
 
-export async function qrCodeFormAction(formData: FormData) {
-  try {
-    const response = await executeDownpayment("111","5");
-    if(!response.ok) return;
-    redirect('/pix-and-credit-card/installments')
+// export async function qrCodeFormAction(prevState: any, formData: FormData) {
+//   try {
+//     const response = await executeDownpayment("111","5");
+//     if(!response.ok) return;
+//     redirect(`/payments/${paymentId}/installments`)
 
-  } catch (err) {
-    throw err;
-  }
-}
+//   } catch (err) {
+//     throw err;
+//   }
+// }
 
 // export async function setCurrentPaymentMethod(method: string) {
 //   const cookieStore = cookies();
@@ -45,5 +49,5 @@ export async function qrCodeFormAction(formData: FormData) {
 
 export async function sendPaymentData(formData: FormData) {
   // Here we make API request to perform the payment operation
-  redirect("/success")
+  redirect("/success");
 }

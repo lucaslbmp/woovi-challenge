@@ -1,20 +1,38 @@
+"use client";
+
 import Button from "@/components/Button";
 import Image from "next/image";
 import { PaymentMethod } from "@/types";
-import { qrCodeFormAction } from "@/actions";
+//import { qrCodeFormAction } from "@/actions";
 import { useTranslations } from "next-intl";
+import { redirect, useParams, useRouter } from "next/navigation";
+import { executeDownpayment } from "@/services";
+import { FormEvent } from "react";
 
 type QRCodeInterfaceProps = {
+  paymentId: string;
 };
 
 export default function QRCodeInterface({
-  
+  paymentId
 }: QRCodeInterfaceProps) {
   const t = useTranslations("QRCodeInterface");
   const t_cta = useTranslations("CTA");
+  const router = useRouter();
+
+  async function handleQRCodeVerify(){
+    try{
+      const response = await executeDownpayment("111",paymentId);
+      if(response.ok){
+        router.push(`/payments/${paymentId}/installments`);
+      }
+    } catch(err){
+      throw err;
+    }
+  }
 
   return (
-    <form action={qrCodeFormAction} className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8">
       <div className="border-highlight border-2 rounded-lg mx-auto">
         <Image
           className=" p-2.5"
@@ -25,7 +43,7 @@ export default function QRCodeInterface({
         />
       </div>
 
-      <Button type="button" className="flex items-center gap-3 mx-auto w-fit">
+      <Button type="button" className="flex items-center gap-3 mx-auto w-fit" >
         {t("buttonLabel")}
         <Image src="/copy.svg" alt="copy" width={16} height={16} />
       </Button>
@@ -36,8 +54,8 @@ export default function QRCodeInterface({
       </div>
 
       <div className="flex basis-full justify-center">
-        <Button className="w-full max-w-[20.5rem]">{t_cta("pay")}</Button>
+        <Button className="w-full max-w-[20.5rem]" onClick={e => handleQRCodeVerify()}>{t_cta("pay")}</Button>
       </div>
-    </form>
+    </div>
   );
 }

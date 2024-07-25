@@ -14,10 +14,22 @@ export async function requestPaymentOptions() {
   }
 }
 
+export async function requestPayments(userId: string) {
+  try {
+    const response = await fetch(`${baseUrl}/user/${userId}/payments`, {cache: "no-cache"});
+    if(!response.ok) throw new Error("");
+    const _payments = await response.json();
+    return _payments as Payment[];
+  } catch (err) {
+    throw err;
+  }
+}
+
 export async function requestPayment(userId: string, paymentId: string) {
   try {
+    if(!paymentId) throw new Error("Invalid payment ID");
     const response = await fetch(`${baseUrl}/user/${userId}/payments/${paymentId}`, {cache: "no-cache"});
-    if(!response.ok) throw new Error("");
+    if(!response.ok) throw new Error("Payment not found");
     const _payment = await response.json();
     return _payment as Payment;
   } catch (err) {
@@ -39,7 +51,6 @@ export async function createPayment(userId: string, option: string) {
     });
     if(!response.ok) throw new Error(""); 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (err) {
     throw err;
@@ -62,6 +73,7 @@ export async function executeDownpayment(userId: string, paymentId: string) {
         cache: "no-cache"
       }
     );
+    
     return response;
   } catch (err) {
     throw err;
