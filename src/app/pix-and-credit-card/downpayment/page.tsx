@@ -1,4 +1,3 @@
-import {  paymentOptions } from "../../api/data";
 import QRCodeInterface from "@/components/QRCodeInterface";
 import { redirect } from "next/navigation";
 import PageTitle from "@/components/PageTitle";
@@ -11,7 +10,9 @@ export default async function DownPaymentSection() {
 
   // const currPaymentMethod = await getCurrentPaymentMethod(paymentOptions);
   // if (!currPaymentMethod) redirect("/");
-  const payment = await requestPayment("111","999");
+  const payment = await requestPayment("111","5");
+  if(!payment)  redirect("/");
+  if(!(Object.keys(payment).length)) redirect("/");
 
   return (
     <>
@@ -22,7 +23,7 @@ export default async function DownPaymentSection() {
         text={
           t("title", {
           user: "João",
-          value: formatToReais(payment.downpayment),
+          value: formatToReais(payment?.downpayment ?? 0),
         })
       }
       />

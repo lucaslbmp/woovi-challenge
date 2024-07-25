@@ -1,29 +1,29 @@
 //@base_url = http://localhost:8000
 @base_url = http://localhost:3000/api
 
-###
+### Get payment options
 GET {{base_url}}/payments/options
 content-type: application/json
 
-###
-GET {{base_url}}/user/111/payments/999
+### Get payment 999
+GET {{base_url}}/user/111/payments/1
 content-type: application/json
 
-###
-DELETE {{base_url}}/user/111/payments/999
+### Delete payment 999
+DELETE {{base_url}}/user/111/payments/1
 content-type: application/json
 
 
-###
-POST {{base_url}}/user/111/payments/create
+### Create payment
+POST {{base_url}}/user/111/payments
 content-type: application/json
 
 {
     "optionId": "opt4"
 }
 
-###
-PATCH {{base_url}}/user/111/payments/999/execute/downpayment
+### Execute downpayment
+PATCH {{base_url}}/user/111/payments/1/execute/downpayment
 content-type: application/json
 
 {

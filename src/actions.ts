@@ -1,10 +1,6 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-import { Payment, PaymentMethod, Step } from "./types";
-import { formatToReais } from "./utils/functions.ts";
-import { paymentOptions } from "./app/api/data";
 import { createPayment, executeDownpayment } from "./services";
 //import {toast} from 'react-toastify'
 
@@ -27,7 +23,7 @@ export async function paymentChoiceAction(prevState: any,formData: FormData) {
 
 export async function qrCodeFormAction(formData: FormData) {
   try {
-    const response = await executeDownpayment("111", "999");
+    const response = await executeDownpayment("111","5");
     if(!response.ok) return;
     redirect('/pix-and-credit-card/installments')
 

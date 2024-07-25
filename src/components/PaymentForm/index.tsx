@@ -1,16 +1,12 @@
 "use client";
 
-import {
-  InstallmentOption,
-  PaymentMethod,
-} from "@/types";
+import { InstallmentOption, PaymentMethod } from "@/types";
 import InputField from "../InputField";
-import { paymentOptions } from "../../app/api/data";
 import { formatToReais } from "@/utils/functions.ts";
 import Button from "../Button";
 import { sendPaymentData } from "@/actions";
 import { ChangeEvent, useEffect, useState } from "react";
-import {  requestPayment } from "@/services";
+import { requestPayment, requestPaymentOptions } from "@/services";
 import { usePaymentContext } from "@/contexts/global-context";
 import useSWR from "swr";
 import { generateInstallments } from "@/utils/functions.ts";
@@ -23,9 +19,7 @@ import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { useSWRFetch } from "@/utils/fetch";
 
-type PaymentFormProps = {
-  
-};
+type PaymentFormProps = {};
 
 type PaymentFormikProps = {
   name: string;
@@ -80,13 +74,21 @@ export default function PaymentForm() {
     });
   }
 
-  function handleSubmit(values: FormikValues){
-    
-  }
+  function handleSubmit(values: FormikValues) {}
 
   // Requesting payment data from backend
+  const {
+    data: payment,
+    error,
+    isLoading,
+  } = useSWRFetch(requestPayment, "111", "5");
 
-  const { data: payment, error, isLoading } = useSWRFetch(requestPayment,"111", "999")
+  // Requesting payment options
+  const {
+    data: paymentOptions,
+    error: errorOptions,
+    isLoading: isLoadingOptions,
+  } = useSWRFetch(requestPaymentOptions);
 
   // Updating page for initial payment data
   useEffect(() => {
@@ -97,11 +99,12 @@ export default function PaymentForm() {
       setNewPayment(payment);
     }
   }, [payment]);
-  
+
   useEffect(() => {
-    console.log(isLoading , payment, Object.keys(payment ?? {}).length)
-    if(!isLoading && payment && Object.keys(payment).length === 0)      redirect("/");
-  }, [isLoading])
+    console.log(isLoading, payment, Object.keys(payment ?? {}).length);
+    if (!isLoading && payment && Object.keys(payment).length === 0)
+      redirect("/");
+  }, [isLoading]);
 
   return (
     <Formik
@@ -128,10 +131,20 @@ export default function PaymentForm() {
             name="cpf"
             autoComplete="off"
             mask={[
-              /\d/, /\d/, /\d/, '.',
-              /\d/, /\d/, /\d/, '.',
-              /\d/, /\d/, /\d/, '-',
-              /\d/, /\d/
+              /\d/,
+              /\d/,
+              /\d/,
+              ".",
+              /\d/,
+              /\d/,
+              /\d/,
+              ".",
+              /\d/,
+              /\d/,
+              /\d/,
+              "-",
+              /\d/,
+              /\d/,
             ]}
             component={MaskedInputComponent}
             label={t("ssn")}
@@ -148,7 +161,7 @@ export default function PaymentForm() {
             name="cardExpiration"
             component={MaskedInputComponent}
             label={t("expirationDate")}
-            mask={[/\d/, /\d/, '/',/\d/, /\d/]}
+            mask={[/\d/, /\d/, "/", /\d/, /\d/]}
             guide={false}
             placeholder="mm/aa"
             className="flex-grow basis-[8em]"
@@ -170,14 +183,19 @@ export default function PaymentForm() {
           >
             {installmenOptions?.map((inst, i) => (
               <option key={i} value={inst.numberOfInstallments}>
-                {`${inst.numberOfInstallments}x ${t_common("of")} ${formatToReais(
-                  inst.installmentValue
-                )}`}
+                {`${inst.numberOfInstallments}x ${t_common(
+                  "of"
+                )} ${formatToReais(inst.installmentValue)}`}
               </option>
             ))}
           </InputField>
           <div className="flex basis-full justify-center">
-            <Button disabled={!formik.isValid || formik.isSubmitting || !formik.dirty} className="w-full max-w-[27rem]">{t_cta("pay")}</Button>
+            <Button
+              disabled={!formik.isValid || formik.isSubmitting || !formik.dirty}
+              className="w-full max-w-[27rem]"
+            >
+              {t_cta("pay")}
+            </Button>
           </div>
         </form>
       )}

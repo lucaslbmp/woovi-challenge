@@ -19,7 +19,7 @@ export default function PaymentSteps() {
 
   // const fetcher = ([userId, id]: [string, string]) =>
   //   requestPayment(userId, id);
-  const { data: dbPayment, error, isLoading } = useSWRFetch(requestPayment, "111", "999");
+  const { data: dbPayment, error, isLoading } = useSWRFetch(requestPayment, "111", "5");
 
   useEffect(() => {
     setPayment(dbPayment);

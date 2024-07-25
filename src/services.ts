@@ -27,7 +27,7 @@ export async function requestPayment(userId: string, paymentId: string) {
 
 export async function createPayment(userId: string, option: string) {
   try {
-    const response = await fetch(`${baseUrl}/user/${userId}/payments/create`, {
+    const response = await fetch(`${baseUrl}/user/${userId}/payments`, {
       method: "POST",
       body: JSON.stringify({
         optionId: option,

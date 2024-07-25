@@ -4,7 +4,6 @@ import { paymentChoiceAction } from "@/actions";
 import Button from "../Button";
 import OptionCard from "../OptionCard";
 import OptionCardsColumn from "../OptionCardsColumn";
-import { paymentOptions } from "@/app/api/data";
 import { useFormState } from "react-dom";
 import { useEffect } from "react";
 import { generateToast } from "../Toast/toastMsg";
@@ -22,11 +21,7 @@ export default function PaymentOptionForm() {
   });
 
 
-  const { data, error, isLoading } = useSWRFetch(requestPaymentOptions)
-
-  useEffect(() => {
-    console.log(data);
-  }, [data])
+  const { data: paymentOptions, error, isLoading } = useSWRFetch(requestPaymentOptions)
 
   useEffect(() => {
     generateToast(state);
