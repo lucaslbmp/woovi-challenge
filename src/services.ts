@@ -1,6 +1,6 @@
 import { Payment } from "./types";
 
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api`;
 
 export async function requestPaymentOptions() {
   try{
