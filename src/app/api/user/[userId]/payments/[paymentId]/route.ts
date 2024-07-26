@@ -6,10 +6,7 @@ type UrlParams = {
   paymentId: string;
 };
 
-// export async function GET(request: Request) {
-//   const _payment = getPayment()
-//   return NextResponse.json(_payment);
-// }
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request, { params }: { params: UrlParams }) {
   const _payment = await prisma.payment.findFirst({

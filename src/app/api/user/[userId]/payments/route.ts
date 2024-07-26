@@ -4,6 +4,7 @@ import prisma from "../../../../../../prisma/db";
 type UrlParams = {
   userId: string;
 };
+export const dynamic = 'force-dynamic';
 
 async function getDataFromOptionId(optionId: string) {
   const _option = await prisma.paymentOption.findFirst({

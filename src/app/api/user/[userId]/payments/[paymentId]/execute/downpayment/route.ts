@@ -8,12 +8,9 @@ type UrlParams = {
   paymentId: string;
 };
 
+export const dynamic = 'force-dynamic';
+
 export async function PATCH(req: Request, { params }: { params: UrlParams }) {
-  // const payment = getPayment();
-  // setPayment({
-  //   ...payment,
-  //   downpaymentStatus: "done",
-  // });
   const _payment = await prisma.payment.findUnique({
     where: { id: Number(params.paymentId) },
   });
